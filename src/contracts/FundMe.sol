@@ -4,6 +4,11 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
+/**
+ * @title FundMe
+ * @dev A crowdfunding platform that allows users to create and contribute to fundraising campaigns.
+ */
+
 contract FundMe {
     using EnumerableSet for EnumerableSet.AddressSet;
     using SafeMath for uint;
@@ -38,7 +43,7 @@ contract FundMe {
         uint256 amountDonated;
     }
 
-    //create milestone struct
+    // Milestone struct
     struct Milestone {
         bytes32 milestoneHash;
         uint256 milestoneGoal;
@@ -63,7 +68,7 @@ contract FundMe {
 
     uint256 internal _campaignId;
 
-    //function modifiers for access control
+    // Function modifiers for access control
     modifier onlyProjectOwner(address projectOwner) {
         require(msg.sender == projectOwner, "Only the owner of the project can call this");
         require(isKYCVerified[projectOwner], "The project owner is not KYC verified");
@@ -75,20 +80,86 @@ contract FundMe {
         _;
     }
     
+    /**
+     * @dev Emitted when a new campaign is created.
+     * @param projectOwner The address of the creator of the campaign.
+     * @param campaignId The ID of the newly created campaign.
+     */
     event CampaignCreated(address indexed projectOwner, uint256 indexed campaignId);
+    
+    /**
+     * @dev Emitted when a campaign is cancelled.
+     * @param campaignId The ID of the cancelled campaign.
+     */
     event CampaignCancelled(uint256 indexed campaignId);
+
+    /**
+     * @dev Emitted when a campaign is closed.
+     * @param campaignId The ID of the closed campaign.
+     */
     event CampaignClosed(uint256 indexed campaignId);
+
+    /**
+     * @dev Emitted when a donor pledges funds to a campaign.
+     * @param campaignId The ID of the campaign the funds were pledged to.
+     * @param donor The address of the donor.
+     * @param amount The amount of funds pledged.
+     */
     event PledgedToCampaign(uint indexed campaignId, address indexed donor, uint indexed amount);
+    
+    /**
+     * @dev Emitted when a donor withdraws their pledge from a campaign.
+     * @param campaignId The ID of the campaign.
+     * @param donor The address of the donor.
+     */
     event Unpledged(uint256 indexed campaignId, address indexed donor);
+
+    /**
+     * @dev Emitted when a campaign is refunded.
+     * @param campaignId The ID of the refunded campaign.
+     * @param donor The address of the donor.
+     * @param amount The amount of funds refunded.
+     */
     event Refunded(uint256 indexed campaignId, address indexed donor, uint256 indexed amount);
+
+    /**
+     * @dev Emitted when funds are withdrawn from a campaign.
+     * @param campaignId The ID of the campaign the funds were withdrawn from.
+     * @param ProjectOwner The address of the project owner.
+     * @param amount The amount of funds withdrawn.
+     */
     event FundsWithdrawn(uint256 indexed campaignId, address indexed ProjectOwner, uint indexed amount);
+
+    /**
+     * @dev Emitted when a milestone is created for a specific campaign.
+     * @param campaignId The ID of the campaign the milestone was created for.
+     * @param milestoneHash The hash of the milestone.
+     */
     event MilestoneCreated(uint256 indexed campaignId, bytes32 indexed milestoneHash);
+
+    /**
+     * @dev Emitted when a milestone is validated.
+     * @param milestoneHash The hash of the milestone.
+     */
     event MilestoneValidated(bytes32 milestoneHash);
 
+    /**
+    * @dev function to set the KYC status of a user.
+    * @param user The address of the user.
+    * @param verified The verification status of the user.
+    */
     function setKYCVerified(address user, bool verified) external {
         isKYCVerified[user] = verified;
     }
 
+    /**
+    * @dev function to create a campaign.
+    * @param title The title of the campaign.
+    * @param imageURL The image URL of the campaign.
+    * @param campaignGoal The goal of the campaign.
+    * @param timeline The timeline of the campaign.
+    * @param milestoneNum The number of milestones for the campaign.
+    */
     function createCampaign(
         string memory _title, 
         string memory _imageURL,
@@ -130,11 +201,16 @@ contract FundMe {
         return (true, campaignId);
     }
 
+    /**
+    * @dev function to cancel a campaign.
+    * @param campaignId The ID of the campaign to cancel.
+    */
     function cancelCampaign(uint campaignId) public onlyProjectOwner(msg.sender) returns (bool) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
         
         if (campaignBalances[campaignId] > 0) {
             campaigns[campaignId].status = CampaignStatus.REFUNDING;
+            
             // Take a snapshot of the contract balance to use in calculating refunds later
             snapshotBalance = campaignBalances[campaignId];
             return true; // Return early if campaign balance is greater than zero
@@ -149,6 +225,10 @@ contract FundMe {
         return true;
     }
 
+    /**
+    * @dev function to close a campaign.
+    * @param campaignId The ID of the campaign to close.
+    */
     function closeCampaign(uint campaignId) internal returns (bool) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
         if (campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal || block.timestamp >= campaigns[campaignId].timeline) {
@@ -159,11 +239,16 @@ contract FundMe {
         return true;
     }
 
-   // Functions
+   // Recieve fallback function receives funds and updates the campaign balances
     receive() external payable {
         campaignBalances[_campaignId] += msg.value;
     }
 
+    /**
+    * @dev function to pledge funds to a campaign.
+    * @param campaignId The ID of the campaign to pledge funds to.
+    * @param amountToDonate The amount of funds to pledge.
+    */
     function pledgeToCampaign(uint256 campaignId, uint256 amountToDonate) public payable {
         require(amountToDonate > 0, "Amount should be greater than 0");
         require(msg.sender != campaigns[campaignId].projectOwner, "You cannot donate to your own campaign");
@@ -190,6 +275,10 @@ contract FundMe {
         emit PledgedToCampaign(campaignId, msg.sender, amountToDonate);
     }
 
+    /**
+    * @dev function to unpledge funds from a campaign.
+    * @param campaignId The ID of the campaign to unpledge funds from.
+    */
     function unpledge(uint256 campaignId) public payable onlyDonors(msg.sender) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
 
@@ -204,12 +293,18 @@ contract FundMe {
         performRefund(campaignId, amountToRefund);
         emit Unpledged(campaignId, msg.sender);
     }
-
+    
+    /**
+    * @dev function to refund a donor.
+    * @param campaignId The ID of the campaign to refund.
+    * @param onlyDonors use the onlyDonors function modifier to allow only the donor to this campaign to be refunded
+    */
     function refundDonor(uint campaignId) public payable onlyDonors(msg.sender) {
+        // Check if the campign is still active and the donor has contributed to this campaign
         if (campaigns[campaignId].status == CampaignStatus.ACTIVE) {
             require(campaignDonorStatus[campaignId][msg.sender] == true, "This donor has not contributed to this campaign");
 
-            // Refund the donor's contribution
+            // Get the amount donated by the donor and refund the donor
             uint256 amountToRefund = donorData[msg.sender].amountDonated;
             performRefund(campaignId, amountToRefund);
         } else if (campaigns[campaignId].status == CampaignStatus.CANCELLED || campaigns[campaignId].status == CampaignStatus.REFUNDING) {
@@ -226,6 +321,11 @@ contract FundMe {
         }
     }
 
+    /**
+    * @dev function to handle the actual refunding of funds.
+    * @param campaignId The ID of the campaign to refund.
+    * @param amountToRefund The amount of funds to refund
+    */
     function performRefund(uint256 campaignId, uint256 amountToRefund) public payable {
         campaigns[campaignId].totalFundDonated -= amountToRefund;
         campaignBalances[campaignId] -= amountToRefund;
@@ -239,6 +339,12 @@ contract FundMe {
         emit Refunded(campaignId, msg.sender, amountToRefund);
     }
 
+    /**
+    * @dev function to withdraw funds from a campaign.
+    * @param campaignId The ID of the campaign to withdraw funds from.
+    * @param milestoneHash The hash of the milestone to withdraw funds for
+    * @param onlyProjectOwner use the onlyProjectOwner modifier to allow only the project owner to withdraw
+    */
     function withdraw(uint campaignId, bytes32 milestoneHash) external payable onlyProjectOwner(msg.sender) returns (bool) {
         // Make sure the campaign is active and the goal amount has been met
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
@@ -256,6 +362,11 @@ contract FundMe {
         return true;
     }
 
+    /**
+    * @dev function to create a new milestone for a campaign.
+    * @param campaignId The ID of the campaign to create a new milestone for.
+    * @param _milestoneHash The hash of the new milestone which represents the details of the new milestone
+    */
     function createMilestone(
         uint256 campaignId, 
         bytes32 _milestoneHash
@@ -278,6 +389,10 @@ contract FundMe {
         return true;
     }
 
+    /**
+    * @dev function to validate a milestone.
+    * @param milestoneHash The hash of the milestone to validate
+    */
     function validateMilestone(bytes32 milestoneHash) external onlyDonors(msg.sender) returns (bool) {
         require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
         milestonesOf[milestoneHash].milestoneValidated = true;
@@ -287,6 +402,10 @@ contract FundMe {
         return true;
     }  
 
+    /**
+    * @dev function to get the addresses of the donors in a campaign.
+    * @param campaignId The ID of the campaign to get the addresses for.
+    */
     function getDonorAddressesInCampaign(uint256 campaignId) public view returns (address[] memory) {
         EnumerableSet.AddressSet storage donors = campaignDonors[campaignId];
         address[] memory addresses = new address[](donors.length());
