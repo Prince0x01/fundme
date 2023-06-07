@@ -381,8 +381,9 @@ contract FundMe {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
 
         bytes32 milestoneHash = keccak256(abi.encodePacked(_milestoneDetails, "_", _milestoneIndex, "_", msg.sender, "_", block.timestamp));
-        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum).mul(10**18);
-
+        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum);
+        milestoneGoal = milestoneGoal.mul( 10**18 );
+        
         milestonesOf[milestoneHash] = Milestone({
             milestoneHash: milestoneHash,
             milestoneIndex: _milestoneIndex,
