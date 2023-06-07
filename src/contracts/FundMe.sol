@@ -381,8 +381,9 @@ contract FundMe {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
 
         bytes32 milestoneHash = keccak256(abi.encodePacked(_milestoneDetails, "_", _milestoneIndex, "_", msg.sender, "_", block.timestamp));
-        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum).mul(10**18);
-
+        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum);
+        milestoneGoal = milestoneGoal.mul( 10**18 );
+        
         milestonesOf[milestoneHash] = Milestone({
             milestoneHash: milestoneHash,
             milestoneIndex: _milestoneIndex,
@@ -405,11 +406,11 @@ contract FundMe {
     * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to validate
     */
     function validateMilestone(bytes32 milestoneHash, bytes32 milestoneProofCID) external onlyDonors(msg.sender) returns (bool) {
-        require(milestonesOf[milestoneHash].milestoneValidated == false, "This milestone has already been validated");
+        require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
         milestoneValidatedByHash[milestoneHash][msg.sender] = true;
         milestonesOf[milestoneHash].milestoneValidated = true;
         milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
-        milestonesOf[milestoneHash].milestoneVotes += 1;
+        milestonesOf[milestoneHash].milestoneVotes ++;
 
         emit MilestoneValidated(milestoneHash);
         return true;
