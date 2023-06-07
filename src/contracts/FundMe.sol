@@ -405,11 +405,11 @@ contract FundMe {
     * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to validate
     */
     function validateMilestone(bytes32 milestoneHash, bytes32 milestoneProofCID) external onlyDonors(msg.sender) returns (bool) {
-        require(milestonesOf[milestoneHash].milestoneValidated == false, "This milestone has already been validated");
+        require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
         milestoneValidatedByHash[milestoneHash][msg.sender] = true;
         milestonesOf[milestoneHash].milestoneValidated = true;
         milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
-        milestonesOf[milestoneHash].milestoneVotes += 1;
+        milestonesOf[milestoneHash].milestoneVotes ++;
 
         emit MilestoneValidated(milestoneHash);
         return true;
