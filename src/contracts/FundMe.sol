@@ -46,9 +46,13 @@ contract FundMe {
     // Milestone struct
     struct Milestone {
         bytes32 milestoneHash;
+        uint milestoneIndex;
+        string milestoneDetails;
         uint256 milestoneGoal;
+        bytes32 milestoneProofCID;
         bool milestoneValidated; 
         uint milestoneVotes;  
+        uint timestamp;
     }
 
     constructor(address payable _owner) {
@@ -154,11 +158,11 @@ contract FundMe {
 
     /**
     * @dev function to create a campaign.
-    * @param title The title of the campaign.
-    * @param imageURL The image URL of the campaign.
-    * @param campaignGoal The goal of the campaign.
-    * @param timeline The timeline of the campaign.
-    * @param milestoneNum The number of milestones for the campaign.
+    * @param _title The title of the campaign.
+    * @param _imageURL The image URL of the campaign.
+    * @param _campaignGoal The goal of the campaign.
+    * @param _timeline The timeline of the campaign.
+    * @param _milestoneNum The number of milestones for the campaign.
     */
     function createCampaign(
         string memory _title, 
@@ -297,7 +301,6 @@ contract FundMe {
     /**
     * @dev function to refund a donor.
     * @param campaignId The ID of the campaign to refund.
-    * @param onlyDonors use the onlyDonors function modifier to allow only the donor to this campaign to be refunded
     */
     function refundDonor(uint campaignId) public payable onlyDonors(msg.sender) {
         // Check if the campign is still active and the donor has contributed to this campaign
@@ -343,7 +346,6 @@ contract FundMe {
     * @dev function to withdraw funds from a campaign.
     * @param campaignId The ID of the campaign to withdraw funds from.
     * @param milestoneHash The hash of the milestone to withdraw funds for
-    * @param onlyProjectOwner use the onlyProjectOwner modifier to allow only the project owner to withdraw
     */
     function withdraw(uint campaignId, bytes32 milestoneHash) external payable onlyProjectOwner(msg.sender) returns (bool) {
         // Make sure the campaign is active and the goal amount has been met
@@ -365,42 +367,54 @@ contract FundMe {
     /**
     * @dev function to create a new milestone for a campaign.
     * @param campaignId The ID of the campaign to create a new milestone for.
-    * @param _milestoneHash The hash of the new milestone which represents the details of the new milestone
+    * @param _milestoneIndex The index or numbering of the new milestone which is used to order the milestones created.
+    * @param _milestoneDetails Description of the milestone
     */
     function createMilestone(
         uint256 campaignId, 
-        bytes32 _milestoneHash
+        uint _milestoneIndex, 
+        string memory _milestoneDetails
     ) external onlyProjectOwner(msg.sender) returns (bool) {
-        require(campaigns[campaignId].milestoneCount <= campaigns[campaignId].milestoneNum, "You have exceeded the valid number of milestones");
+        require(_milestoneIndex > 0, "Please enter a valid milestone index");
+        require(bytes(_milestoneDetails).length > 0, "You have to provide details for the new milestone");
+        require(campaigns[campaignId].milestoneCount < campaigns[campaignId].milestoneNum, "You have exceeded the valid number of milestones");
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
 
+        bytes32 milestoneHash = keccak256(abi.encodePacked(_milestoneDetails, "_", _milestoneIndex, "_", msg.sender, "_", block.timestamp));
         uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum);
         milestoneGoal = milestoneGoal.mul( 10**18 );
- 
-        milestonesOf[_milestoneHash] = Milestone({
-            milestoneHash: _milestoneHash,
+        
+        milestonesOf[milestoneHash] = Milestone({
+            milestoneHash: milestoneHash,
+            milestoneIndex: _milestoneIndex,
+            milestoneDetails: _milestoneDetails,
             milestoneGoal: milestoneGoal,
+            milestoneProofCID: "",
             milestoneValidated: false,
-            milestoneVotes: 0
+            milestoneVotes: 0,
+            timestamp: block.timestamp
         });
 
-        campaigns[campaignId].milestoneCount.add(1);
-
+        campaigns[campaignId].milestoneCount++;
+        emit MilestoneCreated(campaignId, milestoneHash);
         return true;
     }
 
     /**
     * @dev function to validate a milestone.
     * @param milestoneHash The hash of the milestone to validate
+    * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to validate
     */
-    function validateMilestone(bytes32 milestoneHash) external onlyDonors(msg.sender) returns (bool) {
+    function validateMilestone(bytes32 milestoneHash, bytes32 milestoneProofCID) external onlyDonors(msg.sender) returns (bool) {
         require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
-        milestonesOf[milestoneHash].milestoneValidated = true;
         milestoneValidatedByHash[milestoneHash][msg.sender] = true;
-        milestonesOf[milestoneHash].milestoneVotes.add(1);
+        milestonesOf[milestoneHash].milestoneValidated = true;
+        milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
+        milestonesOf[milestoneHash].milestoneVotes ++;
 
+        emit MilestoneValidated(milestoneHash);
         return true;
-    }  
+    }
 
     /**
     * @dev function to get the addresses of the donors in a campaign.
