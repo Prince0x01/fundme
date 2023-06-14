@@ -62,6 +62,7 @@ contract FundMe {
     // Mappings
     mapping(uint256 => Campaign) public campaigns;     
     mapping(uint256 => address) public projectOwners;
+    mapping(address => bool) public hasActiveCampaign;
     mapping(address => Contributor) public donorData;           
     mapping(uint256 => EnumerableSet.AddressSet) internal campaignDonors;
     mapping(uint256 => mapping(address => bool)) public campaignDonorStatus;
@@ -178,6 +179,7 @@ contract FundMe {
         require(_timeline > block.timestamp, "Project should be set in the future");
         require(_milestoneNum >= 4, "Milestones should be at least 4");
         require(isKYCVerified[msg.sender], "You must be KYC verified be you can start a campaign");
+        require(!hasActiveCampaign[msg.sender], "You can only start one campaign at a time");
 
         // Generate the campaignId using keccak256
        campaignId = uint256(keccak256(abi.encodePacked(_title, "_", _timeline, "_", msg.sender, "_", block.timestamp)));
@@ -200,6 +202,7 @@ contract FundMe {
 
         projectOwners[campaignId] = msg.sender;
         campaignCount = campaignCount.add(1);
+        hasActiveCampaign[msg.sender] = true;
 
         emit CampaignCreated(msg.sender, campaignId);
         return (true, campaignId);
