@@ -14,7 +14,7 @@ contract FundMe {
     using SafeMath for uint;
      
     // Enumerations
-    enum CampaignStatus {ACTIVE, CANCELLED, REFUNDING, REFUNDED, CLOSED}
+    enum CampaignStatus {ACTIVE, CANCELLED, REFUNDING, PAYING_OUT, RESOLVING_CAMPAIGN_GOAL, CLOSED, TERMINATED}
 
     // State variables
     address public fundmePlatform;
@@ -235,9 +235,22 @@ contract FundMe {
     */
     function closeCampaign(uint campaignId) internal returns (bool) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
-        if (campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal || block.timestamp >= campaigns[campaignId].timeline) {
-            // Set the campaign status to CLOSED
+        if (campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal && block.timestamp >= campaigns[campaignId].timeline) {
             campaigns[campaignId].status = CampaignStatus.CLOSED;
+
+        }else if (campaigns[campaignId].totalFundDonated < campaigns[campaignId].campaignGoal && block.timestamp >= campaigns[campaignId].timeline) {
+            campaigns[campaignId].status = CampaignStatus.RESOLVING_CAMPAIGN_GOAL;
+            uint refundingDuration = campaigns[campaignId].timeline.add(604800);
+
+            //if refundingDuration is exceeded and totalFundDonated is greater than 0, set the campaign status to PAYING_OUT
+            if (campaigns[campaignId].totalFundDonated > 0) {
+                campaigns[campaignId].status = CampaignStatus.PAYING_OUT;
+                
+            }else if (block.timestamp >= refundingDuration && campaigns[campaignId].totalFundDonated <= 0) {
+                // if refundingDuration is exceeded and totalFundDonated is less than or equal to 0, set the campaign status to TERMINATED
+                campaigns[campaignId].status = CampaignStatus.TERMINATED;
+            }
+            
         }
         emit CampaignClosed(campaignId);
         return true;
@@ -256,10 +269,10 @@ contract FundMe {
     function pledgeToCampaign(uint256 campaignId, uint256 amountToDonate) public payable {
         require(amountToDonate > 0, "Amount should be greater than 0");
         require(msg.sender != campaigns[campaignId].projectOwner, "You cannot donate to your own campaign");
-        require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
+        require(campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL, "You cannot plegde funds to this campaign at this moment");
 
         // Transfer the amountToDonate from the msg.sender to the contract and update the balance
-        campaignBalances[campaignId] += msg.value;
+        campaignBalances[campaignId] += amountToDonate;
 
         // Update the campaign's total fund donated
         campaigns[campaignId].totalFundDonated += amountToDonate;
@@ -284,7 +297,7 @@ contract FundMe {
     * @param campaignId The ID of the campaign to unpledge funds from.
     */
     function unpledge(uint256 campaignId) public payable onlyDonors(msg.sender) {
-        require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
+        require(campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL, "You cannot unpledge funds from this campaign at this moment");
 
         // Check if the donor has made a pledge to this campaign
         require(campaignDonorStatus[campaignId][msg.sender] == true, "You have not donated to this campaign");
@@ -304,13 +317,13 @@ contract FundMe {
     */
     function refundDonor(uint campaignId) public payable onlyDonors(msg.sender) {
         // Check if the campign is still active and the donor has contributed to this campaign
-        if (campaigns[campaignId].status == CampaignStatus.ACTIVE) {
+        if (campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL) {
             require(campaignDonorStatus[campaignId][msg.sender] == true, "This donor has not contributed to this campaign");
 
             // Get the amount donated by the donor and refund the donor
             uint256 amountToRefund = donorData[msg.sender].amountDonated;
             performRefund(campaignId, amountToRefund);
-        } else if (campaigns[campaignId].status == CampaignStatus.CANCELLED || campaigns[campaignId].status == CampaignStatus.REFUNDING) {
+        } else if (campaigns[campaignId].status == CampaignStatus.CANCELLED || campaigns[campaignId].status == CampaignStatus.REFUNDING || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL) {
             require(campaignDonorStatus[campaignId][msg.sender], "This donor has not contributed to this campaign");
 
             // Calculate the refund amount based on the snapshot balance and percentage of donated funds
@@ -349,7 +362,7 @@ contract FundMe {
     */
     function withdraw(uint campaignId, bytes32 milestoneHash) external payable onlyProjectOwner(msg.sender) returns (bool) {
         // Make sure the campaign is active and the goal amount has been met
-        require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
+        require(campaigns[campaignId].status == CampaignStatus.CLOSED || campaigns[campaignId].status == CampaignStatus.PAYING_OUT, "You cannot withdraw funds from this campaign at this moment");
         require(campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal, "Goal amount has not been met");
 
         transactionFee = campaigns[campaignId].campaignGoal.mul(5).div(100);
@@ -381,7 +394,8 @@ contract FundMe {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
 
         bytes32 milestoneHash = keccak256(abi.encodePacked(_milestoneDetails, "_", _milestoneIndex, "_", msg.sender, "_", block.timestamp));
-        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum).mul(10**18);
+        uint256 milestoneGoal = campaigns[campaignId].campaignGoal.div(campaigns[campaignId].milestoneNum);
+        milestoneGoal = milestoneGoal.mul( 10**18 );
 
         milestonesOf[milestoneHash] = Milestone({
             milestoneHash: milestoneHash,
@@ -405,11 +419,11 @@ contract FundMe {
     * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to validate
     */
     function validateMilestone(bytes32 milestoneHash, bytes32 milestoneProofCID) external onlyDonors(msg.sender) returns (bool) {
-        require(milestonesOf[milestoneHash].milestoneValidated == false, "This milestone has already been validated");
+        require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
         milestoneValidatedByHash[milestoneHash][msg.sender] = true;
         milestonesOf[milestoneHash].milestoneValidated = true;
         milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
-        milestonesOf[milestoneHash].milestoneVotes += 1;
+        milestonesOf[milestoneHash].milestoneVotes ++;
 
         emit MilestoneValidated(milestoneHash);
         return true;
