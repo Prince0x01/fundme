@@ -2,6 +2,12 @@
   "name": "fundme",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
   "dependencies": {
     "@hashgraph/sdk": "^2.27.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.1",
@@ -14,44 +20,19 @@
     "@typechain/ethers-v6": "^0.4.0",
     "@typechain/hardhat": "^8.0.0",
     "@types/mocha": ">=9.1.0",
-    "cra-template": "1.2.0",
-    "ethers": "^6.3.0",
+    "autoprefixer": "10.4.14",
+    "ethers": "^5.5.4",
+    "framer-motion": "^10.12.16",
     "hardhat": "^2.14.0",
-    "hardhat-gas-reporter": "^1.0.8",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
-    "solidity-coverage": "^0.8.1",
-    "ts-node": ">=8.0.0",
-    "typechain": "^8.2.0",
-    "typescript": ">=4.5.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "next": "13.4.3",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwindcss": "3.3.2",
+    "web3.storage": "^4.5.4"
   },
   "devDependencies": {
-    "dotenv": "^16.1.4",
-    "web3.storage": "^4.5.4"
+    "eslint": "^8.43.0",
+    "eslint-config-next": "^13.4.6"
   }
 }
