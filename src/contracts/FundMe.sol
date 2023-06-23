@@ -21,6 +21,7 @@ contract FundMe {
     uint public transactionFee;
     uint public campaignCount;
     uint public snapshotBalance;
+    uint256[] public campaignIds;
 
     // Variables
     struct Campaign {
@@ -63,12 +64,15 @@ contract FundMe {
     mapping(uint256 => Campaign) public campaigns;     
     mapping(uint256 => address) public projectOwners;
     mapping(address => bool) public hasActiveCampaign;
+    mapping(uint256 => bool) public inactiveCampaigns;
     mapping(address => Contributor) public donorData;           
     mapping(uint256 => EnumerableSet.AddressSet) internal campaignDonors;
     mapping(uint256 => mapping(address => bool)) public campaignDonorStatus;
     mapping(uint256 => uint256) public campaignBalances;
-    mapping(address => bool) public isKYCVerified;
+    mapping(address => mapping(string => bool)) public isKYCVerified;
+    mapping(address => bool) public verifiedAddress;
     mapping(bytes32 => Milestone) public milestonesOf;
+    mapping(uint256 => bytes32[]) internal milestoneList;
     mapping(bytes32 => mapping(address => bool)) public milestoneValidatedByHash;
 
     uint256 internal _campaignId;
@@ -76,7 +80,6 @@ contract FundMe {
     // Function modifiers for access control
     modifier onlyProjectOwner(address projectOwner) {
         require(msg.sender == projectOwner, "Only the owner of the project can call this");
-        require(isKYCVerified[projectOwner], "The project owner is not KYC verified");
         _;
     }
 
@@ -84,7 +87,7 @@ contract FundMe {
         require(msg.sender == donor, "Only the donor can call this");
         _;
     }
-    
+
     /**
      * @dev Emitted when a new campaign is created.
      * @param projectOwner The address of the creator of the campaign.
@@ -148,13 +151,16 @@ contract FundMe {
      */
     event MilestoneValidated(bytes32 milestoneHash);
 
-    /**
-    * @dev function to set the KYC status of a user.
-    * @param user The address of the user.
-    * @param verified The verification status of the user.
-    */
-    function setKYCVerified(address user, bool verified) external {
-        isKYCVerified[user] = verified;
+        /**
+     * @dev Sets the KYC verification status for the user
+     * @param verificationProof The proof provided by the user for verification
+     * @return true if the user is verified, false otherwise
+     */
+    function setKycVerified(string memory verificationProof) external returns (bool) {
+        require(bytes(verificationProof).length > 0, "You must provide a verification proof");
+        isKYCVerified[msg.sender][verificationProof] = true;
+        verifiedAddress[msg.sender] = true;
+        return true;
     }
 
     /**
@@ -170,7 +176,8 @@ contract FundMe {
         string memory _imageURL,
         uint _campaignGoal,
         uint _timeline,
-        uint _milestoneNum
+        uint _milestoneNum,
+        string memory _verificationProof
 
     ) public returns (bool, uint256 campaignId) {
         require(bytes(_title).length > 0, "Title cannot be empty");
@@ -178,7 +185,7 @@ contract FundMe {
         require(_campaignGoal > 0, "Project Goal should be greater than 0");
         require(_timeline > block.timestamp, "Project should be set in the future");
         require(_milestoneNum >= 4, "Milestones should be at least 4");
-        require(isKYCVerified[msg.sender], "You must be KYC verified be you can start a campaign");
+        require(isKYCVerified[msg.sender][_verificationProof], "You must be KYC verified before you can start a campaign");
         require(!hasActiveCampaign[msg.sender], "You can only start one campaign at a time");
 
         // Generate the campaignId using keccak256
@@ -203,6 +210,7 @@ contract FundMe {
         projectOwners[campaignId] = msg.sender;
         campaignCount = campaignCount.add(1);
         hasActiveCampaign[msg.sender] = true;
+        campaignIds.push(campaignId);
 
         emit CampaignCreated(msg.sender, campaignId);
         return (true, campaignId);
@@ -220,14 +228,15 @@ contract FundMe {
             
             // Take a snapshot of the contract balance to use in calculating refunds later
             snapshotBalance = campaignBalances[campaignId];
-            return true; // Return early if campaign balance is greater than zero
+            return true;
         }
         
-        // If campaign balance is zero or less, proceed with cancellation and deletion
         campaigns[campaignId].status = CampaignStatus.CANCELLED;
         delete campaigns[campaignId];
         delete projectOwners[campaignId];
         campaignCount = campaignCount.sub(1);
+        hasActiveCampaign[msg.sender] = false;
+        _markCampaignInactive(campaignId);
         emit CampaignCancelled(campaignId);
         return true;
     }
@@ -252,11 +261,17 @@ contract FundMe {
             }else if (block.timestamp >= refundingDuration && campaigns[campaignId].totalFundDonated <= 0) {
                 // if refundingDuration is exceeded and totalFundDonated is less than or equal to 0, set the campaign status to TERMINATED
                 campaigns[campaignId].status = CampaignStatus.TERMINATED;
+                _markCampaignInactive(campaignId);
             }
             
         }
         emit CampaignClosed(campaignId);
         return true;
+    }
+
+    function _markCampaignInactive(uint256 campaignId) internal {
+        require(!inactiveCampaigns[campaignId], "Campaign already inactive");
+        inactiveCampaigns[campaignId] = true;
     }
 
    // Recieve fallback function receives funds and updates the campaign balances
@@ -265,32 +280,27 @@ contract FundMe {
     }
 
     /**
-    * @dev function to pledge funds to a campaign.
-    * @param campaignId The ID of the campaign to pledge funds to.
-    * @param amountToDonate The amount of funds to pledge.
-    */
+     * @dev function to pledge funds to a campaign.
+     * @param campaignId The ID of the campaign to pledge funds to.
+     * @param amountToDonate The amount of funds to pledge.
+     */
     function pledgeToCampaign(uint256 campaignId, uint256 amountToDonate) public payable {
         require(amountToDonate > 0, "Amount should be greater than 0");
         require(msg.sender != campaigns[campaignId].projectOwner, "You cannot donate to your own campaign");
-        require(campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL, "You cannot plegde funds to this campaign at this moment");
+        require(campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL, "You cannot pledge funds to this campaign at this moment");
 
-        // Transfer the amountToDonate from the msg.sender to the contract and update the balance
         campaignBalances[campaignId] += amountToDonate;
 
-        // Update the campaign's total fund donated
         campaigns[campaignId].totalFundDonated += amountToDonate;
         campaigns[campaignId].totalDonors += 1;
 
-        // Update the contributor's amount donated and the donorAddresses mapping
-        donorData[msg.sender] = Contributor({
-            donor: payable(msg.sender),
-            amountDonated: 0
-        });
-
+        if (donorData[msg.sender].donor == address(0)) { // Check if this is the first time the donor is donating to this campaign
+            donorData[msg.sender].donor = payable(msg.sender);
+            donorData[msg.sender].amountDonated = 0;
+            campaignDonors[campaignId].add(msg.sender);
+        }
         donorData[msg.sender].amountDonated += amountToDonate;
-        campaignDonors[campaignId].add(msg.sender);
 
-        // Set the campaignDonorStatus mapping to true for this campaign and msg.sender
         campaignDonorStatus[campaignId][msg.sender] = true;
         emit PledgedToCampaign(campaignId, msg.sender, amountToDonate);
     }
@@ -302,14 +312,11 @@ contract FundMe {
     function unpledge(uint256 campaignId) public payable onlyDonors(msg.sender) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL, "You cannot unpledge funds from this campaign at this moment");
 
-        // Check if the donor has made a pledge to this campaign
         require(campaignDonorStatus[campaignId][msg.sender] == true, "You have not donated to this campaign");
 
-        // Find the donor's contribution for this campaign
         uint256 amountToRefund = donorData[msg.sender].amountDonated;
         require(amountToRefund > 0, "You have not donated to this campaign");
 
-        // Refund the donor's contribution for this campaign
         performRefund(campaignId, amountToRefund);
         emit Unpledged(campaignId, msg.sender);
     }
@@ -319,11 +326,9 @@ contract FundMe {
     * @param campaignId The ID of the campaign to refund.
     */
     function refundDonor(uint campaignId) public payable onlyDonors(msg.sender) {
-        // Check if the campign is still active and the donor has contributed to this campaign
         if (campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL) {
             require(campaignDonorStatus[campaignId][msg.sender] == true, "This donor has not contributed to this campaign");
 
-            // Get the amount donated by the donor and refund the donor
             uint256 amountToRefund = donorData[msg.sender].amountDonated;
             performRefund(campaignId, amountToRefund);
         } else if (campaigns[campaignId].status == CampaignStatus.CANCELLED || campaigns[campaignId].status == CampaignStatus.REFUNDING || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL) {
@@ -333,7 +338,6 @@ contract FundMe {
             uint256 amountToRefundPercentage = donorData[msg.sender].amountDonated.mul(100).div(campaigns[campaignId].totalFundDonated);
             uint amountToRefund = snapshotBalance.mul(amountToRefundPercentage).div(100);
 
-            // Refund the donor's contribution
             performRefund(campaignId, amountToRefund);
         } else {
             revert("Campaign is not refundable");
@@ -412,6 +416,7 @@ contract FundMe {
         });
 
         campaigns[campaignId].milestoneCount++;
+        milestoneList[campaignId].push(milestoneHash);
         emit MilestoneCreated(campaignId, milestoneHash);
         return true;
     }
@@ -446,4 +451,35 @@ contract FundMe {
 
         return addresses;
     }
+
+    /**
+     * @dev function to get the active campaign IDs.
+     * @return The active campaign IDs.
+    */
+    function getActiveCampaignIds() external view returns (uint256[] memory) {
+        uint256[] memory activeCampaignIds = new uint256[](campaignIds.length);
+
+        uint256 numActiveCampaigns = 0;
+        for (uint256 i = 0; i < campaignIds.length; i++) {
+            uint256 campaignId = campaignIds[i];
+
+            if (!inactiveCampaigns[campaignId]) {
+            activeCampaignIds[numActiveCampaigns] = campaignId;
+            numActiveCampaigns++;
+            }
+        }
+        assembly {
+            mstore(activeCampaignIds, numActiveCampaigns)
+        }
+
+        return activeCampaignIds;
+    }
+
+    /// @dev Returns an array of milestones for a given campaign ID
+    /// @param campaignId The ID of the campaign to retrieve milestones for
+    /// @return An array of bytes32 values representing milestones
+    function getMilestoneList(uint256 campaignId) public view returns (bytes32[] memory) {
+        return milestoneList[campaignId];
+    }
+
 }

@@ -24,3 +24,6 @@ yarn-error.log*
 
 #ignore .env file
 .env
+
+#ignore acctData.json
+acctData.json
