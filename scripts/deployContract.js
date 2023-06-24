@@ -1,47 +1,32 @@
-const { Client, ContractCreateFlow } = require("@hashgraph/sdk");
+
+const { ContractId } = require('@hashgraph/sdk');
+const { ethers } = require("hardhat");
+
 const fs = require('fs');
 const path = require('path');
+const acctDataPath = path.join(__dirname, "acctData.json");
+const acctDataJson = fs.readFileSync(acctDataPath, 'utf-8');
+const acctData = JSON.parse(acctDataJson);
 
-const main = async () => {
-  const acctDataPath = path.join(__dirname, 'acctData.json');
-  const acctDataJson = await fs.promises.readFile(acctDataPath, 'utf-8');
-  const acctData = JSON.parse(acctDataJson);
+const arkhiaJsonApiUrl = `${acctData.ARKHIA_JSON_RPC_URL}/${acctData.ARKHIA_API_KEY}`;
+const provider = new ethers.providers.JsonRpcProvider(arkhiaJsonApiUrl);
+const operatorPrivateKey = acctData.MY_PRIVATE_KEY;
 
-  if (!acctData.MY_ACCOUNT_ID || !acctData.MY_PRIVATE_KEY) {
-    throw new Error('Account ID and private key must be present in acctData.json');
-  }
+deployContract = async () => {
+    try {
+        const wallet = new ethers.Wallet(operatorPrivateKey, provider);
+        // Key method to interact with the contract/constructor
+        const EVM_ADDRESS = acctData.EVM_ADDRESS; // replace with the actual EVM address
+        const FundMe = await ethers.getContractFactory('FundMe', wallet);
+        const fundme = await FundMe.deploy(EVM_ADDRESS);
+        const receipt = await fundme.deployTransaction.wait();
 
-  const client = Client.forTestnet();
-  client.setOperator(acctData.MY_ACCOUNT_ID, acctData.MY_PRIVATE_KEY);
-
-  const fundMePath = path.join(__dirname, '..', 'src', 'abis', 'FundMe.json');
-  const fundMeJson = await fs.promises.readFile(fundMePath, 'utf-8');
-  const bytecode = JSON.parse(fundMeJson).bytecode.replace('0x', '');
-
-  const contractCreate = new ContractCreateFlow()
-    .setGas(4000000)
-    .setBytecode(bytecode);
-
-  const txResponse = contractCreate.execute(client);
-  const receipt = (await txResponse).getReceipt(client);
-  // const contractId = receipt.getContractId();
-
-  // console.log('Contract ID:');
-  // console.log(contractId.toString());
-
-  // console.log('Contract address:');
-  // console.log(contractId.toSolidityAddress());
-
-  //Get the new contract ID
-  const newContractId = (await receipt).contractId;
-  console.log("The new contract ID is " + newContractId);
-  console.log(
-    "The new contract address",
-    "0x" + newContractId.toSolidityAddress()
-  );
-};
-
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
+        // Get deployed data
+        const contractAddress = receipt.contractAddress;
+        const contractID = ContractId.fromSolidityAddress(contractAddress);
+        console.log(`Contract ${contractID} successfully deployed to ${contractAddress}`);
+        return {contractAddress, contractID};
+    } catch(e) {
+        console.error(e);
+    }
+}

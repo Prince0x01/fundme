@@ -50,7 +50,7 @@ contract FundMe {
         uint milestoneIndex;
         string milestoneDetails;
         uint256 milestoneGoal;
-        bytes32 milestoneProofCID;
+        string milestoneProofCID;
         bool milestoneValidated; 
         uint milestoneVotes;  
         uint timestamp;
@@ -146,12 +146,19 @@ contract FundMe {
     event MilestoneCreated(uint256 indexed campaignId, bytes32 indexed milestoneHash);
 
     /**
+     * @dev Emitted when a milestone is updated for a specific campaign.
+     * @param milestoneHash The hash of the milestone.
+     * @param milestoneProofCID The CID of the milestone, that point to the file on web3.Storage.
+     */
+    event MilestoneProofUpdated(bytes32 indexed milestoneHash, string indexed milestoneProofCID);
+
+    /**
      * @dev Emitted when a milestone is validated.
      * @param milestoneHash The hash of the milestone.
      */
     event MilestoneValidated(bytes32 milestoneHash);
 
-        /**
+    /**
      * @dev Sets the KYC verification status for the user
      * @param verificationProof The proof provided by the user for verification
      * @return true if the user is verified, false otherwise
@@ -422,17 +429,30 @@ contract FundMe {
     }
 
     /**
-    * @dev function to validate a milestone.
-    * @param milestoneHash The hash of the milestone to validate
-    * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to validate
+    * @dev function to update a milestone's proof.
+    * @param milestoneHash The hash of the milestone to update
+    * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to update 
+    * @dev only the project owner can update the milestone's proof
     */
-    function validateMilestone(bytes32 milestoneHash, bytes32 milestoneProofCID) external onlyDonors(msg.sender) returns (bool) {
+    function updateMilestoneProof(bytes32 milestoneHash, string memory milestoneProofCID) external onlyProjectOwner(msg.sender) returns (string memory) {
+        //require(milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID , "Milestone already has a proof");
+        milestoneValidatedByHash[milestoneHash][msg.sender] = false;
+        milestonesOf[milestoneHash].milestoneValidated = false;
+        milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
+        emit MilestoneProofUpdated(milestoneHash, milestoneProofCID);
+        return milestoneProofCID;
+    }
+
+    /**
+    * @dev function to validate a milestone.
+    * @dev only a donor to the project can validate a milestone
+    * @param milestoneHash The hash of the milestone to validate
+    */
+    function validateMilestone(bytes32 milestoneHash) external onlyDonors(msg.sender) returns (bool) {
         require(milestoneValidatedByHash[milestoneHash][msg.sender] == false, "You have already validated this milestone");
         milestoneValidatedByHash[milestoneHash][msg.sender] = true;
         milestonesOf[milestoneHash].milestoneValidated = true;
-        milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID;
         milestonesOf[milestoneHash].milestoneVotes ++;
-
         emit MilestoneValidated(milestoneHash);
         return true;
     }

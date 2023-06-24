@@ -1,7 +1,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const acctDataPath = path.join(__dirname, "acctData.json");
+const acctDataPath = path.join(__dirname, "scripts", "acctData.json");
 
 // Read the contents of the acctData file
 const acctDataJson = fs.readFileSync(acctDataPath, "utf-8");
@@ -13,7 +13,7 @@ const MY_PRIVATE_KEY = acctData.MY_PRIVATE_KEY;
 console.log("MY_ACCOUNT_ID:", MY_ACCOUNT_ID);
 console.log("MY_PRIVATE_KEY:", MY_PRIVATE_KEY);
 
-const filePath = path.join(__dirname, "..", "src", "abis", "FundMe.json");
+const filePath = path.join(__dirname, "artifacts", "contracts", "FundMe.sol", "FundMe.json");
 
 // Read the contents of the FundMe.json file
 const fundMeJson = fs.readFileSync(filePath, "utf-8");
