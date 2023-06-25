@@ -24,6 +24,7 @@ const WalletProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
   const [hasMetamask, setHasMetamask] = useState(false);
   const [signer, setSigner] = useState(null);
+  const [provider, setProvider] = useState(null);
   const [address, setAddress] = useState(null);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const WalletProvider = ({ children }) => {
         setIsConnected(true);
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const address = await provider.listAccounts();
+        setProvider(provider)
         setAddress(address[0]);
         setSigner(provider.getSigner());
       } catch (e) {
@@ -50,8 +52,8 @@ const WalletProvider = ({ children }) => {
   }
 
   const value = useMemo(
-    () => ({ signer, address, connect, isConnected, hasMetamask }),
-    [address, hasMetamask, isConnected, signer]
+    () => ({ signer, address, connect, isConnected, hasMetamask, provider }),
+    [address, hasMetamask, isConnected, provider, signer]
   );
 
   return (

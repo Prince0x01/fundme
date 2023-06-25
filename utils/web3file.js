@@ -91,3 +91,9 @@ export async function retrieveFiles(cid) {
 export const createImageUrl = (cid, fileName, fileType) => {
   return `https://${cid}.ipfs.w3s.link/${encodeURI(fileName)}.${fileType}`;
 };
+
+export const changeFileName = (file, newName) => {
+  return new File([file], `${newName}.${file.type.split("/")[1]}`, {
+    type: file.type,
+  });
+};

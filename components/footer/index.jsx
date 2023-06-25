@@ -12,11 +12,11 @@ const Footer = () => {
       >
         <div className="flex-1 font-playfair">
           <h2 className="text-3xl font-bold mb-2 ">FUND ME</h2>
-          <h3 className="text-xl font-semibold mb-1">10k</h3>
+          {/* <h3 className="text-xl font-semibold mb-1">10k</h3>
           <h4 className="text-base">
             Worldwide Client <br />
             Already Connected
-          </h4>
+          </h4> */}
         </div>
         <div className="flex-1">
           <h4 className="font-bold mb-4 font-playfair">Quick Link</h4>
@@ -37,7 +37,7 @@ const Footer = () => {
         <div className="flex-1">
           <h4 className="font-bold mb-2">Address</h4>
           <p className="mb-3 font-light text-sm">
-            Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+            Port Harcourt, Nigeria
           </p>
           <h4 className="font-bold mb-2">Socials</h4>
           <ul className="flex gap-3">

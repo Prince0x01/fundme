@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { ethers } from "ethers";
 
 import Footer from "@/components/footer";
@@ -7,10 +7,10 @@ import Navbar from "@/components/navbar";
 import Loader from "@/components/Loader";
 
 import { useWalletContext } from "@/context/walletContext";
-import { calculateBarPercentage, parseCampaign } from "@/utils/helpers";
 import { abi, contractAddress } from "@/utils/contract";
+import { calculateBarPercentage, parseCampaign } from "@/utils/helpers";
 
-const CampaignPage = () => {
+const Profile = () => {
   const { signer, address } = useWalletContext();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,8 +26,10 @@ const CampaignPage = () => {
         const res = await Promise.all(
           activeIds.map(async (id) => await contract.campaigns(id))
         );
-        const parsedCampaigns = res.map((item) => parseCampaign(item));
-        setCampaigns(parsedCampaigns);
+        const filteredCampaigns = res
+          .filter((campaign) => campaign.projectOwner === address)
+          .map((item) => parseCampaign(item));
+        setCampaigns(filteredCampaigns);
       } catch (error) {
         setError(error.message);
       }
@@ -35,7 +37,7 @@ const CampaignPage = () => {
     };
     fetchCampaigns();
     return () => {};
-  }, [signer]);
+  }, [address, signer]);
 
   return (
     <div className="flex flex-col justify-between min-h-screen">
@@ -49,13 +51,14 @@ const CampaignPage = () => {
         <div className="absolute inset-0 m-auto capitalize text-white text-center max-w-[600px] flex items-end justify-center p-4">
           <div>
             <h1 className="text-3xl lg:text-5xl lg:leading-tight font-bold mt-2 mb-3 font-playfair">
-              Active Campaigns
+              My Campaigns
             </h1>
           </div>
         </div>
       </div>
 
       {/* Campaigns Section */}
+
       {loading && <Loader />}
 
       {!signer ? (
@@ -75,7 +78,7 @@ const CampaignPage = () => {
           {!campaigns || campaigns.length === 0 ? (
             <div className="w-11/12 xl:w-4/5 max-w-7xl mx-auto my-8 flex flex-col items-center justify-center gap-3">
               <h2 className="font-bold text-2xl">
-                There is currently no active campaign
+                You currently do not have an active campaign
               </h2>
               <button className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white mr-2 text-xs md:text-base md:mr-0">
                 <Link href={"/create"}>Create Campaign</Link>
@@ -134,7 +137,7 @@ const CampaignPage = () => {
                           </div>
                         </div>
                         <button className="bg-[#3C4A79] px-3 py-2 rounded-lg text-white text-sm">
-                          {c.owner === address ? "View Campaign" : "Donate Now"}
+                          View Campaign
                         </button>
                       </div>
                     </div>
@@ -152,4 +155,4 @@ const CampaignPage = () => {
   );
 };
 
-export default CampaignPage;
+export default Profile;
