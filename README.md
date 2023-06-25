@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+Project Description of FundMe
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Project Name:
+FundMe crowdfunding Platform.
 
-## Available Scripts
+Summary of Project:
+FundMe Dapp is a decentralized crowdfunding platform built on Hedera hashgraph network. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables projects owners to showcase their projects, set funding goals, and receive donations from interested individuals(donors). unlike traditional crowdfunding Dapps, FundMe allows donors to track and ensure that the funds contributed are used for the intended purposes by using a method of democratically vetting of proofs provided by project owners according to preset milestones to enforce transparency, thereby eliminating the possibility of dishonest use or misappropriation of funds by project owners. The platform also provides KYC capabilities using third-party decentralized identity verification systems to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
 
-In the project directory, you can run:
+Problem statement.
+crowdfunding, while having brought much needed relief to individuals and organizations also has its own limitations or negative impacts on the society,
+chief amongst this is the;
 
-### `yarn start`
+1)exclusion of certain countries and geographical areas from having access to funds.
+2)terrorist financing
+3)Low donor engagement throughout the projects implementation/execution phase
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Exclusion of certain geographical areas from accessing funds;
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+most crowdfunding web2 platforms an example of which is goFundMe, has certain restriction or ban on some geographical areas.this has limited persons needing aid in those areas from having access to funds, further more with those platforms, trasnfer of funds becomes a problem in cases where certain payment channels like paypal are not allowed.
+A decentralized crowdfunding platform solves the matter of exclusion by allowing any one any where, who has an internet connectivity to connect to the platform and eliminates the need of payment gateways by directly transferring the funds in cryptocurrency into the wallets  of the benefactors.
 
-### `yarn test`
+3)Terrorism Financing and misuse of funds. Perhaps the bane of internet crowdfunding is not having the ability to be certain of what the funds are actually used for. this is the central aim of the FundMe crowdfunding Dapp.
+*The platform, implements a systems of KYC verification ensured by a third party application.
+*The platform requires the campaign goal (the total amount of money to be raised) to be divided into milestones. The number of donors that donates to a campaign automatically forms a campaign DAO. The Project owner(the person who starts a campaign) is required to provide a market survey/feasibility study or any form of evidence and cost of the project. This process is known as the Proof of Problem(PoP).
+*Potential donors can decide on which campaign to contribute to, after going through the PoP of a campaign.
+*A Project Owner can only request to withdraw funds, when the funds has reached a preset milestone. At each milestone, the project owner is required to upload upload a video/picture or docx file of how the previous funds were spent. This data is stored in an external decentralized database.
+*The campaign DAO, can access this data stored of-chain and vet if the funds were used for the appropriate purposes. Atleast 60% of the campaign DAO has to vet on the positive for the project owner to withdraw funds.
+*If a POP was vetted against,the campaign will go into a state of Resolving Milestone,this will remain for a period of 7 days, at which point the campaign DAO can decide to retrieve their funds. After a period of 7 days, the projector owner Is given a second chance to upload a genuine PoP.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+Low donor engagement throughout the projects implementation/execution phase.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In a traditional decentralized funding platform,donors have no power/means to verify that their funds were used for the intended purposes, after donations, there is no active role for the donor to play. FundMe gives the donors the power to ensure that their funds are used for the intended purposes and they are not unintentionally funding a terrorist organization.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+Team members.
+1)Princewill Ogolo
+Pseudonym: Prince0x01
+Email: ogoloprince4@gmail.com
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2)Emmanuel Amieye
+Pseudonyms
+Discod:Emmy j #1136
+Github: https://github.com/code-xiake
+Email:emmanuelamieye4@gmail.com
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3)Name: Anderson Osayerie
+Pseudonym : andemosa
+Github: https://github.com/andemosa
+Email : osayerieanderson@gmail.com
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+List of Stack Used.
+NextJs - React framework
+Ethers - Web3 framework
+Tailwind Css - used for styling
+Flowbite - pre built custom Tailwind components
+Web3uikit - custom components and notifications provider
+Web3.storage - storing files on ipfs
+Framer-motion - custom animations
