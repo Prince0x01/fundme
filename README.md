@@ -21,17 +21,22 @@ A decentralized crowdfunding platform solves the matter of exclusion by allowing
 
 3)Terrorism Financing and misuse of funds. Perhaps the bane of internet crowdfunding is not having the ability to be certain of what the funds are actually used for. this is the central aim of the FundMe crowdfunding Dapp.
 *The platform, implements a systems of KYC verification ensured by a third party application.
-*The platform requires the campaign goal (the total amount of money to be raised) to be divided into milestones. The number of donors that donates to a campaign automatically forms a campaign DAO. The Project owner(the person who starts a campaign) is required to provide a market survey/feasibility study or any form of evidence and cost of the project. This process is known as the Proof of Problem(PoP).
-*Potential donors can decide on which campaign to contribute to, after going through the PoP of a campaign.
+*The platform requires the campaign goal (the total amount of money to be raised) to be divided into milestones. The number of donors that donates to a campaign automatically forms a campaign DAO. The Project owner(the person who starts a campaign) is required to provide a market survey/feasibility study or any form of evidence and cost of the project. This process is known as the proof of need(PoN).
+*Potential donors can decide on which campaign to contribute to, after going through the PoN of a campaign.
 *A Project Owner can only request to withdraw funds, when the funds has reached a preset milestone. At each milestone, the project owner is required to upload upload a video/picture or docx file of how the previous funds were spent. This data is stored in an external decentralized database.
 *The campaign DAO, can access this data stored of-chain and vet if the funds were used for the appropriate purposes. Atleast 60% of the campaign DAO has to vet on the positive for the project owner to withdraw funds.
-*If a POP was vetted against,the campaign will go into a state of Resolving Milestone,this will remain for a period of 7 days, at which point the campaign DAO can decide to retrieve their funds. After a period of 7 days, the projector owner Is given a second chance to upload a genuine PoP.
+*If a PoN was vetted against,the campaign will go into a state of Resolving Milestone,this will remain for a period of 7 days, at which point the campaign DAO can decide to retrieve their funds. After a period of 7 days, the projector owner Is given a second chance to upload a genuine PoN.
 
 
 Low donor engagement throughout the projects implementation/execution phase.
 
 In a traditional decentralized funding platform,donors have no power/means to verify that their funds were used for the intended purposes, after donations, there is no active role for the donor to play. FundMe gives the donors the power to ensure that their funds are used for the intended purposes and they are not unintentionally funding a terrorist organization.
 
+Hedera Technology;
+The smart contract of this project was written of this project was written in solidity and makes use of the  Hedera contract service to interact Hedera Network.
+The hedera blockchain acts as the backend and performs the following functions:
+*The hedera blockchain receives inputs from a third party KYC application to verifies the project owner.
+*The hedera blockchain through the smart contract stores the funds provided by donors and assign them (as campaign DAO) the verify the appropriate use of the funds, as stated In the PoN.
 
 
 Team members.
@@ -59,3 +64,5 @@ Flowbite - pre built custom Tailwind components
 Web3uikit - custom components and notifications provider
 Web3.storage - storing files on ipfs
 Framer-motion - custom animations
+Solidity - programming langauage
+Hedera Blockchain -block chain
