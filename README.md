@@ -57,6 +57,7 @@ The FundMe project is developed by a dedicated team of individuals:
 
 1) Princewill Ogolo
    - Pseudonym: Prince0x01
+   - GitHub: https:https://github.com/Prince0x01/fundme.git
    - Email: ogoloprince4@gmail.com
 
 2) Emmanuel Amieye
