@@ -1,68 +1,83 @@
-Project Description of FundMe
+# FundMe Crowdfunding Platform
 
-Project Name:
-FundMe crowdfunding Platform.
+![FundMe Logo](/path/to/logo.png) <!-- Add a logo image if available -->
 
-Summary of Project:
-FundMe Dapp is a decentralized crowdfunding platform built on Hedera hashgraph network. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables projects owners to showcase their projects, set funding goals, and receive donations from interested individuals(donors). unlike traditional crowdfunding Dapps, FundMe allows donors to track and ensure that the funds contributed are used for the intended purposes by using a method of democratically vetting of proofs provided by project owners according to preset milestones to enforce transparency, thereby eliminating the possibility of dishonest use or misappropriation of funds by project owners. The platform also provides KYC capabilities using third-party decentralized identity verification systems to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
+## Project Description
 
-Problem statement.
-crowdfunding, while having brought much needed relief to individuals and organizations also has its own limitations or negative impacts on the society,
-chief amongst this is the;
+**Project Name:** FundMe Crowdfunding Platform
 
-1)exclusion of certain countries and geographical areas from having access to funds.
-2)terrorist financing
-3)Low donor engagement throughout the projects implementation/execution phase
+**Summary:** FundMe is a decentralized crowdfunding platform built on the Hedera Hashgraph network. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables project owners to showcase their projects, set funding goals, and receive donations from interested individuals (donors). Unlike traditional crowdfunding platforms, FundMe incorporates a method of democratically vetting proofs provided by project owners according to preset milestones, ensuring transparency and eliminating the possibility of dishonest use or misappropriation of funds. The platform also implements KYC capabilities using a third-party decentralized identity verification system to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
 
-Exclusion of certain geographical areas from accessing funds;
+## Problem Statement
 
-most crowdfunding web2 platforms an example of which is goFundMe, has certain restriction or ban on some geographical areas.this has limited persons needing aid in those areas from having access to funds, further more with those platforms, trasnfer of funds becomes a problem in cases where certain payment channels like paypal are not allowed.
-A decentralized crowdfunding platform solves the matter of exclusion by allowing any one any where, who has an internet connectivity to connect to the platform and eliminates the need of payment gateways by directly transferring the funds in cryptocurrency into the wallets  of the benefactors.
+Crowdfunding, while bringing much-needed relief to individuals and organizations, also has its limitations and negative impacts on society. FundMe addresses the following challenges:
 
-3)Terrorism Financing and misuse of funds. Perhaps the bane of internet crowdfunding is not having the ability to be certain of what the funds are actually used for. this is the central aim of the FundMe crowdfunding Dapp.
-*The platform, implements a systems of KYC verification ensured by a third party application.
-*The platform requires the campaign goal (the total amount of money to be raised) to be divided into milestones. The number of donors that donates to a campaign automatically forms a campaign DAO. The Project owner(the person who starts a campaign) is required to provide a market survey/feasibility study or any form of evidence and cost of the project. This process is known as the proof of need(PoN).
-*Potential donors can decide on which campaign to contribute to, after going through the PoN of a campaign.
-*A Project Owner can only request to withdraw funds, when the funds has reached a preset milestone. At each milestone, the project owner is required to upload upload a video/picture or docx file of how the previous funds were spent. This data is stored in an external decentralized database.
-*The campaign DAO, can access this data stored of-chain and vet if the funds were used for the appropriate purposes. Atleast 60% of the campaign DAO has to vet on the positive for the project owner to withdraw funds.
-*If a PoN was vetted against,the campaign will go into a state of Resolving Milestone,this will remain for a period of 7 days, at which point the campaign DAO can decide to retrieve their funds. After a period of 7 days, the projector owner Is given a second chance to upload a genuine PoN.
+1. Exclusion of certain countries and geographical areas from accessing funds.
+2. Risks associated with terrorist financing.
+3. Low donor engagement throughout the project implementation/execution phase.
 
+### Exclusion of Certain Geographical Areas from Accessing Funds
 
-Low donor engagement throughout the projects implementation/execution phase.
+Many traditional crowdfunding platforms, such as goFundMe, impose restrictions or bans on specific geographical areas, limiting individuals in those regions from accessing much-needed funds. Additionally, the transfer of funds becomes problematic when certain payment channels, like PayPal, are not allowed. FundMe solves these issues by providing a decentralized crowdfunding platform that allows anyone, anywhere, with internet connectivity to connect to the platform and directly transfer funds in cryptocurrency to the beneficiaries' wallets, eliminating the need for payment gateways.
 
-In a traditional decentralized funding platform,donors have no power/means to verify that their funds were used for the intended purposes, after donations, there is no active role for the donor to play. FundMe gives the donors the power to ensure that their funds are used for the intended purposes and they are not unintentionally funding a terrorist organization.
+### Terrorism Financing and Misuse of Funds
 
-Hedera Technology;
-The smart contract of this project was written of this project was written in solidity and makes use of the  Hedera contract service to interact Hedera Network.
-The hedera blockchain acts as the backend and performs the following functions:
-*The hedera blockchain receives inputs from a third party KYC application to verifies the project owner.
-*The hedera blockchain through the smart contract stores the funds provided by donors and assign them (as campaign DAO) the verify the appropriate use of the funds, as stated In the PoN.
+One of the main concerns in internet crowdfunding is the inability to ensure that funds are used for their intended purposes. FundMe tackles this issue through the following mechanisms:
 
+- **KYC Verification:** FundMe implements a robust Know Your Customer (KYC) verification process, ensured by a third-party application. This process verifies the legitimacy and identity of all participants involved in the crowdfunding platform. By leveraging a decentralized identity management system, FundMe collects and verifies personal information, ensuring compliance with globally accepted anti-money laundering (AML) and counter-terrorism financing (CTF) policies.
 
-Team members.
-1)Princewill Ogolo
-Pseudonym: Prince0x01
-Email: ogoloprince4@gmail.com
+- **Proof of Need (PoN):** The platform requires campaign goals (total amount of money to be raised) to be divided into milestones. The project owner, who initiates a campaign, is required to provide a market survey, feasibility study, or any form of evidence and cost estimation for the project. This process is known as the Proof of Need (PoN).
 
-2)Emmanuel Amieye
-Pseudonyms
-Discod:Emmy j #1136
-Github: https://github.com/code-xiake
-Email:emmanuelamieye4@gmail.com
+- **Donor Decision-making:** Potential donors can review the Proof of Need (PoN) of a campaign before deciding which campaign to contribute to. This empowers donors to make informed decisions and ensure their funds align with the intended purposes.
 
-3)Name: Anderson Osayerie
-Pseudonym : andemosa
-Github: https://github.com/andemosa
-Email : osayerieanderson@gmail.com
+- **Transparent Milestone Verification:** A project owner can only request to withdraw funds when the funds have reached a preset milestone. At each milestone, the project owner is required to upload video, picture, or document files showcasing how the previous funds were spent. This data is stored in an external decentralized database.
 
+- **Campaign DAO Vetting:** The campaign DAO (formed by the number of donors contributing to a campaign) can access the off-chain data and vet if the funds were used appropriately. At least 60% of the campaign DAO members must approve for the project owner to withdraw funds.
 
-List of Stack Used.
-NextJs - React framework
-Ethers - Web3 framework
-Tailwind Css - used for styling
-Flowbite - pre built custom Tailwind components
-Web3uikit - custom components and notifications provider
-Web3.storage - storing files on ipfs
-Framer-motion - custom animations
-Solidity - programming langauage
-Hedera Blockchain -block chain
+- **Resolving Milestone:** If a Proof of Need (PoN) is vetted against, the campaign goes into a state of Resolving Milestone, which lasts for a period of 7 days. During this time, the campaign DAO can decide
+
+ to retrieve their funds. After 7 days, if the campaign DAO has not retrieved the funds, the project owner is given a second chance to upload a genuine Proof of Need (PoN).
+
+### Low Donor Engagement throughout Project Implementation
+
+In traditional crowdfunding platforms, donors have no means to actively verify that their funds were used for the intended purposes. After making a donation, donors typically have no active role to play throughout the project implementation/execution phase. FundMe addresses this issue by giving donors the power to ensure their funds are used for the intended purposes, mitigating the risk of unintentionally funding a terrorist organization.
+
+## Hedera Technology
+
+FundMe utilizes the following technologies:
+
+- **Smart Contract:** The project's smart contract is written in Solidity and interacts with the Hedera Contract Service to leverage the Hedera Network.
+- **Hedera Blockchain:** The Hedera blockchain acts as the backend for FundMe and performs the following functions:
+  - Receives inputs from a third-party KYC application to verify project owners.
+  - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
+
+## Team Members
+
+The FundMe project is developed by a dedicated team of individuals:
+
+1) Princewill Ogolo
+   - Pseudonym: Prince0x01
+   - Email: ogoloprince4@gmail.com
+
+2) Emmanuel Amieye
+   - Pseudonym: Emmy j #1136
+   - GitHub: [https://github.com/code-xiake](https://github.com/code-xiake)
+   - Email: emmanuelamieye4@gmail.com
+
+3) Anderson Osayerie
+   - Pseudonym: andemosa
+   - GitHub: [https://github.com/andemosa](https://github.com/andemosa)
+   - Email: osayerieanderson@gmail.com
+
+## Stack Used
+
+- Next.js: React framework
+- Ethers: Web3 framework
+- Tailwind CSS: Styling framework
+- Flowbite: Pre-built custom Tailwind components
+- Web3uikit: Custom components and notifications provider
+- Web3.storage: Storing files on IPFS
+- Framer Motion: Custom animations
+- Solidity: Programming language
+- Hedera Blockchain: Hedera Contract Service
+- Fractal.id: Decentralized identity management
