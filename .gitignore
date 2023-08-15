@@ -27,8 +27,6 @@ yarn-error.log*
 #ignore .env file
 .env
 
-#ignore acctData.json
-acctData.json
 # local env files
 .env*.local
 
@@ -38,3 +36,4 @@ acctData.json
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+node_modules
