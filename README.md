@@ -6,7 +6,7 @@
 
 **Project Name:** FundMe Crowdfunding Platform
 
-**Summary:** FundMe is a decentralized crowdfunding platform built on the Hedera Hashgraph network. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables project owners to showcase their projects, set funding goals, and receive donations from interested individuals (donors). Unlike traditional crowdfunding platforms, FundMe incorporates a method of democratically vetting proofs provided by project owners according to preset milestones, ensuring transparency and eliminating the possibility of dishonest use or misappropriation of funds. The platform also implements KYC capabilities using a third-party decentralized identity verification system to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
+**Summary:** FundMe is a decentralized crowdfunding platform built on the Linea network. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables project owners to showcase their projects, set funding goals, and receive donations from interested individuals (donors). Unlike traditional crowdfunding platforms, FundMe incorporates a method of democratically vetting proofs provided by project owners according to preset milestones, ensuring transparency and eliminating the possibility of dishonest use or misappropriation of funds. The platform also implements KYC capabilities using a third-party decentralized identity verification system to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
 
 ## Problem Statement
 
@@ -42,12 +42,12 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 In traditional crowdfunding platforms, donors have no means to actively verify that their funds were used for the intended purposes. After making a donation, donors typically have no active role to play throughout the project implementation/execution phase. FundMe addresses this issue by giving donors the power to ensure their funds are used for the intended purposes, mitigating the risk of unintentionally funding a terrorist organization.
 
-## Hedera Technology
+## Linea Technology
 
 FundMe utilizes the following technologies:
 
 - **Smart Contract:** The project's smart contract is written in Solidity and interacts with the Hedera Contract Service to leverage the Hedera Network.
-- **Hedera Blockchain:** The Hedera blockchain acts as the backend for FundMe and performs the following functions:
+- **Linea Network:** The Hedera blockchain acts as the backend for FundMe and performs the following functions:
   - Receives inputs from a third-party KYC application to verify project owners.
   - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
 
@@ -73,12 +73,17 @@ The FundMe project is developed by a dedicated team of individuals:
 ## Stack Used
 
 - Next.js: React framework
-- Ethers: Web3 framework
 - Tailwind CSS: Styling framework
 - Flowbite: Pre-built custom Tailwind components
 - Web3uikit: Custom components and notifications provider
 - Web3.storage: Storing files on IPFS
 - Framer Motion: Custom animations
-- Solidity: Programming language
-- Hedera Blockchain: Hedera Contract Service
 - Fractal.id: Decentralized identity management
+- Solidity: Programming language
+- Ethereum Networks: Sepolia testnet for deployment and Linear l2 network
+- Ethers: Web3 framework
+- Infura: Infura RPC endpoints
+- Truffle: Truffle dashboard,truffle config file and migrations for contract compilation and deployment
+- Metamask: Metamask SDK and
+- Metamask Snaps: Transaction insight snaps
+
