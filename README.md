@@ -46,8 +46,8 @@ In traditional crowdfunding platforms, donors have no means to actively verify t
 
 FundMe utilizes the following technologies:
 
-- **Smart Contract:** The project's smart contract is written in Solidity and interacts with the Hedera Contract Service to leverage the Hedera Network.
-- **Linea Network:** The Hedera blockchain acts as the backend for FundMe and performs the following functions:
+- **Smart Contract:** The project's smart contract is written in Solidity and interacts with the linea network.
+- **Linea Network:** The Linea L2 network acts as the backend for FundMe and performs the following functions:
   - Receives inputs from a third-party KYC application to verify project owners.
   - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
 
@@ -57,7 +57,7 @@ The FundMe project is developed by a dedicated team of individuals:
 
 1) Princewill Ogolo
    - Pseudonym: Prince0x01
-   - GitHub: https:https://github.com/Prince0x01/fundme.git
+   - GitHub: [https://github.com/Prince0x01/](https://github.com/prince0x01)
    - Email: ogoloprince4@gmail.com
 
 2) Emmanuel Amieye
