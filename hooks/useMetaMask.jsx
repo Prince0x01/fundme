@@ -12,7 +12,7 @@ import { ethers } from "ethers";
 import { formatBalance } from "../utils";
 
 const defaultSnapOrigin =
-  process.env.SNAP_ORIGIN ?? `local:http://localhost:8080`;
+  process.env.SNAP_ORIGIN ?? `npm:fundme-snap`;
 
 export const connectSnap = async (snapId = defaultSnapOrigin, params = {}) => {
   await window.ethereum.request({
