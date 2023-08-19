@@ -4,21 +4,21 @@ import { Accordion } from "flowbite-react";
 import { ethers } from "ethers";
 
 import Footer from "@/components/footer";
-import DoveIcon from "@/components/icons/doveicon";
-import EarthIcon from "@/components/icons/earthicon";
-import HandshakeIcon from "@/components/icons/handshakeicon";
-import MissionIcon from "@/components/icons/missionicon";
-import VisionIcon from "@/components/icons/visionicon";
-import VolunteerIcon from "@/components/icons/volunteericon";
+// import DoveIcon from "@/components/icons/doveicon";
+// import EarthIcon from "@/components/icons/earthicon";
+// import HandshakeIcon from "@/components/icons/handshakeicon";
+// import MissionIcon from "@/components/icons/missionicon";
+// import VisionIcon from "@/components/icons/visionicon";
+// import VolunteerIcon from "@/components/icons/volunteericon";
 import Navbar from "@/components/navbar";
 import TypingText from "@/components/TypingText";
 
-import { useWalletContext } from "@/context/walletContext";
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { calculateBarPercentage, parseCampaign } from "@/utils/helpers";
 import { abi, contractAddress } from "@/utils/contract";
 
 const Home = () => {
-  const { signer, address } = useWalletContext();
+  const { signer, wallet } = useMetaMask();
   const [campaigns, setCampaigns] = useState([]);
   const [, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -153,7 +153,7 @@ const Home = () => {
           </div>
         ) : (
           <>
-            <div className="flex gap-4 mt-6 mb-4 py-4 overflow-x-scroll lg:overflow-hidden">
+            <div className="flex gap-4 mt-6 mb-4 py-4 px-2 overflow-x-scroll 2xl:overflow-hidden">
               {campaigns.map((c) => {
                 const percentageRaised = calculateBarPercentage(
                   c.goal,
@@ -162,7 +162,7 @@ const Home = () => {
 
                 return (
                   <Link href={`/campaign/${c.id}`} key={c.id}>
-                    <div className="shadow-[0px_10px_25px_rgba(37,42,52,0.08)] rounded-xl bg-white min-w-[220px] max-w-[280px]">
+                    <div className="shadow-[0px_10px_25px_rgba(37,42,52,0.08)] rounded-xl bg-white min-w-[250px] max-w-[320px]">
                       <div>
                         <img
                           src={c.image}
@@ -198,7 +198,9 @@ const Home = () => {
                           </div>
                         </div>
                         <button className="bg-[#3C4A79] px-3 py-2 rounded-lg text-white text-sm">
-                          {c.owner === address ? "View Campaign" : "Donate Now"}
+                          {c.owner === wallet.accounts[0]
+                            ? "View Campaign"
+                            : "Donate Now"}
                         </button>
                       </div>
                     </div>

@@ -6,12 +6,12 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Loader from "@/components/Loader";
 
-import { useWalletContext } from "@/context/walletContext";
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { abi, contractAddress } from "@/utils/contract";
 import { calculateBarPercentage, parseCampaign } from "@/utils/helpers";
 
 const Profile = () => {
-  const { signer, address } = useWalletContext();
+  const { signer, wallet } = useMetaMask();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -27,7 +27,7 @@ const Profile = () => {
           activeIds.map(async (id) => await contract.campaigns(id))
         );
         const filteredCampaigns = res
-          .filter((campaign) => campaign.projectOwner === address)
+          .filter((campaign) => campaign.projectOwner === wallet.accounts[0])
           .map((item) => parseCampaign(item));
         setCampaigns(filteredCampaigns);
       } catch (error) {
@@ -37,7 +37,7 @@ const Profile = () => {
     };
     fetchCampaigns();
     return () => {};
-  }, [address, signer]);
+  }, [signer, wallet.accounts]);
 
   return (
     <div className="flex flex-col justify-between min-h-screen">
@@ -85,7 +85,7 @@ const Profile = () => {
               </button>
             </div>
           ) : (
-            <section className="w-11/12 xl:w-4/5 max-w-7xl mx-auto my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <section className="w-11/12 xl:w-4/5 max-w-7xl mx-auto my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {campaigns.map((c) => {
                 const percentageRaised = calculateBarPercentage(
                   c.goal,

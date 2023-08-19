@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { Navbar } from "flowbite-react";
 import Link from "next/link";
 
-import { useWalletContext } from "@/context/walletContext";
+import { formatAddress } from "@/utils";
+import { useMetaMask } from "@/hooks/useMetaMask";
 
 const NavbarComp = () => {
   const [active, setActive] = useState(false);
-  const { hasMetamask, isConnected, connect, address } = useWalletContext();
+  const { wallet, hasProvider, connectMetaMask } = useMetaMask();
 
   const isActive = () => {
     window.scrollY > 90 ? setActive(true) : setActive(false);
@@ -29,27 +30,32 @@ const NavbarComp = () => {
       } fixed w-full z-20 top-0 left-0`}
     >
       <div className="flex flex-wrap items-center justify-between w-full md:px-0 md:w-11/12 xl:w-4/5 max-w-7xl mx-auto">
-        <Navbar.Brand className="text-2xl xs:text-3xl font-playfair">
+        <Navbar.Brand className="text-xl xs:text-3xl font-playfair">
           FUNDME
         </Navbar.Brand>
         <div className="flex md:order-2">
-          {hasMetamask ? (
-            isConnected ? (
-              <p className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white mr-2 text-xs md:text-base md:mr-0 flex justify-center items-center">
-                {address?.slice(0, 6)}...
-                {address?.slice(address?.length - 4)}
-              </p>
-            ) : (
-              <button
-                className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white mr-2 text-xs md:text-base md:mr-0"
-                onClick={connect}
+          {!hasProvider && (
+            <p className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white mr-0 text-xs md:text-base md:mr-0 flex justify-center items-center">
+              <a
+                href="https://metamask.io/flask/"
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                Connect
-              </button>
-            )
-          ) : (
+                Please Install Metamask Flask
+              </a>
+            </p>
+          )}
+          {hasProvider && wallet.accounts.length < 1 && (
+            <button
+              className="bg-[#3C4A79] px-3 py-2 rounded-lg text-white mr-0 text-xs md:text-base md:mr-0"
+              onClick={connectMetaMask}
+            >
+              Connect and Install Snap
+            </button>
+          )}
+          {hasProvider && wallet.accounts.length > 0 && (
             <p className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white mr-2 text-xs md:text-base md:mr-0 flex justify-center items-center">
-              Please install metamask
+              {formatAddress(wallet.accounts[0])}
             </p>
           )}
           <Navbar.Toggle />

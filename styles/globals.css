@@ -12,6 +12,10 @@
   scroll-behavior: smooth;
 }
 
+button:disabled {
+  opacity: 0.5;
+}
+
 .clip-fund {
   clip-path: polygon(0 0, 100% 0, 66% 100%, 0% 100%);
 }

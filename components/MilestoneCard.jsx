@@ -1,12 +1,12 @@
+import { useEffect, useState } from "react";
 import { Card } from "flowbite-react";
 import { Spinner } from "flowbite-react";
 import { useNotification } from "web3uikit";
 import { ethers } from "ethers";
 
-import { useWalletContext } from "@/context/walletContext";
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { abi, contractAddress } from "@/utils/contract";
 import { formatError } from "@/utils/helpers";
-import { useEffect, useState } from "react";
 
 const MilestoneCard = ({
   goal,
@@ -27,7 +27,7 @@ const MilestoneCard = ({
   setSelectedMilestone,
   setSelectedImage,
 }) => {
-  const { signer, address, provider } = useWalletContext();
+  const { signer, provider, wallet } = useMetaMask();
   const dispatch = useNotification();
   const [hasValidated, setHasValidated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -39,7 +39,7 @@ const MilestoneCard = ({
       try {
         const res = await contract.milestoneValidatedByHash(
           milestoneHash,
-          address
+          wallet.accounts[0]
         );
         setHasValidated(res);
       } catch (error) {
@@ -49,7 +49,7 @@ const MilestoneCard = ({
     };
     checkPledgeStatus();
     return () => {};
-  }, [address, milestoneHash, signer]);
+  }, [milestoneHash, signer, wallet.accounts]);
 
   const handleNewNotification = (type, message) => {
     dispatch({
@@ -89,7 +89,7 @@ const MilestoneCard = ({
   const validCID = milestoneCID !== "";
 
   const canValidate =
-    campaignOwner !== address &&
+    campaignOwner !== wallet.accounts[0] &&
     hasPledged &&
     validCID &&
     !loading &&
@@ -129,7 +129,7 @@ const MilestoneCard = ({
             )}
           </button>
         )}
-        {campaignOwner === address && (
+        {campaignOwner === wallet.accounts[0] && (
           <>
             {canWithdraw && (
               <button

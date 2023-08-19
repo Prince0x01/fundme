@@ -6,12 +6,12 @@ import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import Loader from "@/components/Loader";
 
-import { useWalletContext } from "@/context/walletContext";
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { calculateBarPercentage, parseCampaign } from "@/utils/helpers";
 import { abi, contractAddress } from "@/utils/contract";
 
 const CampaignPage = () => {
-  const { signer, address } = useWalletContext();
+  const { signer, wallet } = useMetaMask();
   const [campaigns, setCampaigns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -82,7 +82,7 @@ const CampaignPage = () => {
               </button>
             </div>
           ) : (
-            <section className="w-11/12 xl:w-4/5 max-w-7xl mx-auto my-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <section className="w-11/12 xl:w-4/5 max-w-7xl mx-auto my-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {campaigns.map((c) => {
                 const percentageRaised = calculateBarPercentage(
                   c.goal,
@@ -134,7 +134,9 @@ const CampaignPage = () => {
                           </div>
                         </div>
                         <button className="bg-[#3C4A79] px-3 py-2 rounded-lg text-white text-sm">
-                          {c.owner === address ? "View Campaign" : "Donate Now"}
+                          {c.owner === wallet.accounts[0]
+                            ? "View Campaign"
+                            : "Donate Now"}
                         </button>
                       </div>
                     </div>

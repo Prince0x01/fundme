@@ -1,25 +1,22 @@
 import Head from "next/head";
-import { MoralisProvider } from "react-moralis";
-import { NotificationProvider } from "web3uikit";
+
+import { MetaMaskContextProvider } from "@/hooks/useMetaMask";
 
 import "../styles/globals.css";
-import { WalletProvider } from "@/context/walletContext";
 
-const MyApp = ({ Component, pageProps }) => (
-  <>
-    <Head>
-      <title>Fund Me</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
-    <MoralisProvider initializeOnMount={false}>
-      <NotificationProvider>
-        <WalletProvider>
-          <Component {...pageProps} />
-        </WalletProvider>
-      </NotificationProvider>
-    </MoralisProvider>
-  </>
-);
+const MyApp = ({ Component, pageProps }) => {
+  return (
+    <>
+      <Head>
+        <title>Fund Me</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <MetaMaskContextProvider>
+        <Component {...pageProps} />
+      </MetaMaskContextProvider>
+    </>
+  );
+};
 
 export default MyApp;

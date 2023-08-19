@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { Spinner } from "flowbite-react";
-import { useNotification } from "web3uikit";
+// import { useNotification } from "web3uikit";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -18,9 +18,9 @@ import CreateMilestoneModal from "@/components/CreateMilestoneModal";
 import DonateModal from "@/components/DonateModal";
 import UploadModal from "@/components/UploadModal";
 import ValidateModal from "@/components/ValidateModal";
-import MilestoneCard from "@/components/Card";
+import MilestoneCard from "@/components/MilestoneCard";
 
-import { useWalletContext } from "@/context/walletContext";
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { abi, contractAddress } from "@/utils/contract";
 import {
   calculateBarPercentage,
@@ -29,6 +29,7 @@ import {
   parseMilestone,
 } from "@/utils/helpers";
 import { changeFileName, createImageUrl, storeFiles } from "@/utils/web3file";
+import { sendNotification } from "@/utils";
 
 dayjs.extend(customParseFormat);
 dayjs.extend(advancedFormat);
@@ -36,8 +37,7 @@ dayjs.extend(relativeTime);
 
 const CampaignPage = () => {
   const router = useRouter();
-  const { signer, address, provider } = useWalletContext();
-
+  const { signer, provider, wallet } = useMetaMask();
   const [campaign, setCampaign] = useState({});
   const [milestones, setMilestones] = useState([]);
   const [createModal, setCreateModal] = useState(false);
@@ -52,7 +52,7 @@ const CampaignPage = () => {
   const [error, setError] = useState("");
   const [requestError, setRequestError] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
-  const dispatch = useNotification();
+  // const dispatch = useNotification();
   const campaignId = router.query.id;
 
   useEffect(() => {
@@ -91,7 +91,7 @@ const CampaignPage = () => {
       const contract = new ethers.Contract(contractAddress, abi, signer);
       try {
         const res = await contract.getDonorAddressesInCampaign(campaignId);
-        const hasDonated = res.includes(address);
+        const hasDonated = res.includes(wallet.accounts[0]);
         setHasPledged(hasDonated);
       } catch (error) {
         setError(error);
@@ -100,16 +100,17 @@ const CampaignPage = () => {
     };
     checkPledgeStatus();
     return () => {};
-  }, [address, campaignId, signer, requestLoading]);
+  }, [campaignId, signer, requestLoading, wallet.accounts]);
 
   const handleNewNotification = (type, message) => {
-    dispatch({
-      type,
-      message,
-      title: "Transaction Notification",
-      position: "topR",
-      icon: "bell",
-    });
+    sendNotification(message?.slice(0, 45));
+    // dispatch({
+    //   type,
+    //   message,
+    //   title: "Transaction Notification",
+    //   position: "topR",
+    //   icon: "bell",
+    // });
   };
 
   const percentageRaised = calculateBarPercentage(
@@ -165,9 +166,9 @@ const CampaignPage = () => {
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "Milestone proof uploaded successfully");
       setUploadModal(false);
-    } catch (error) {
-      console.log(error);
-      handleNewNotification("error", "An error occurred");
+    } catch (err) {
+      handleNewNotification("error", formatError(err));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -186,7 +187,8 @@ const CampaignPage = () => {
       handleNewNotification("info", "Successfully created milestone");
       setCreateModal(false);
     } catch (error) {
-      handleNewNotification("error", "An error occurred");
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -206,9 +208,9 @@ const CampaignPage = () => {
       await provider.waitForTransaction(res.hash, 1, 150000);
       setDonateModal(false);
       handleNewNotification("info", "Successfully donated");
-    } catch (error) {
-      console.log(error);
-      handleNewNotification("error", formatError(error.message));
+    } catch (err) {
+      handleNewNotification("error", formatError(err));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -223,7 +225,8 @@ const CampaignPage = () => {
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "Successfully refunded");
     } catch (error) {
-      handleNewNotification("error", formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -238,7 +241,8 @@ const CampaignPage = () => {
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "Successfully cancelled");
     } catch (error) {
-      handleNewNotification("error", formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -253,7 +257,8 @@ const CampaignPage = () => {
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "Successfully unpledged");
     } catch (error) {
-      handleNewNotification("error", formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -269,7 +274,8 @@ const CampaignPage = () => {
       handleNewNotification("info", "Validate successful");
       setValidateModal(false);
     } catch (error) {
-      handleNewNotification("error", formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -410,7 +416,7 @@ const CampaignPage = () => {
                     </div>
                   </div>
                   <div className="flex flex-col items-center justify-center gap-1 mt-8">
-                    {campaign.owner !== address && (
+                    {campaign.owner !== wallet.accounts[0] && (
                       <div>
                         {campaign.status === 2 ? (
                           <button
@@ -463,7 +469,7 @@ const CampaignPage = () => {
                       </div>
                     )}
 
-                    {campaign.owner === address && (
+                    {campaign.owner === wallet.accounts[0] && (
                       <div>
                         <button
                           className="text-[#3C4A79] px-3 py-2 rounded-lg bg-white text-sm border border-[#3C4A79]"

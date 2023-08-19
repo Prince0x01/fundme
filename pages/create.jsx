@@ -2,21 +2,22 @@ import { FileInput, Label, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-import { useNotification } from "web3uikit";
+// import { useNotification } from "web3uikit";
 
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import LoaderComp from "@/components/Loader";
 import TransactionLoader from "@/components/TransactionLoader";
 
-import { useWalletContext } from "@/context/walletContext";
-
+import { useMetaMask } from "@/hooks/useMetaMask";
 import { changeFileName, createImageUrl, storeFiles } from "@/utils/web3file";
 import { abi, contractAddress } from "@/utils/contract";
 import { formatError } from "@/utils/helpers";
+import { sendNotification } from "@/utils";
 
 const Create = () => {
-  const { signer, address, provider } = useWalletContext();
+  const { signer, provider, wallet } =
+    useMetaMask();
   const router = useRouter();
   const [isVerified, setIsVerified] = useState(true);
   const [formData, setFormData] = useState({
@@ -30,7 +31,14 @@ const Create = () => {
   const [error, setError] = useState(null);
   const [requestError, setRequestError] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
-  const dispatch = useNotification();
+  // const dispatch = useNotification();
+
+  const btnDisabled =
+    !formData.title ||
+    !formData.goal ||
+    !formData.milestone ||
+    !formData.endDate ||
+    !formData.image;
 
   useEffect(() => {
     const checkVerificationStatus = async () => {
@@ -39,7 +47,7 @@ const Create = () => {
       setRequestError("");
       const contract = new ethers.Contract(contractAddress, abi, signer);
       try {
-        const res = await contract.verifiedAddress(address);
+        const res = await contract.verifiedAddress(wallet.accounts[0]);
         setIsVerified(res);
       } catch (error) {
         setError(error);
@@ -48,19 +56,14 @@ const Create = () => {
     };
     checkVerificationStatus();
     return () => {};
-  }, [address, signer]);
+  }, [wallet.accounts, signer]);
 
   const handleNewNotification = (type, message) => {
-    dispatch({
-      type,
-      message,
-      title: "Transaction Notification",
-      position: "topR",
-      icon: "bell",
-    });
+    sendNotification(message?.slice(0, 49));
   };
 
   const handleChange = (e) => {
+    setRequestError("");
     const { files, name, value } = e.target;
     if (name === "image") {
       return setFormData({
@@ -77,7 +80,9 @@ const Create = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (btnDisabled) return;
     setRequestLoading(true);
+    setRequestError("");
 
     const timeline = new Date(formData.endDate);
     const timelineStamp = Math.floor(timeline.getTime() / 1000);
@@ -85,7 +90,7 @@ const Create = () => {
     try {
       const newFile = changeFileName(
         formData.image,
-        `${address}-${formData.title}`
+        `${wallet.accounts[0]}-${formData.title}`
       );
       const storeRes = await storeFiles([newFile]);
 
@@ -103,29 +108,31 @@ const Create = () => {
         ethers.utils.parseEther(formData.goal),
         timelineStamp,
         formData.milestone,
-        address?.slice(address?.length - 10)
+        wallet.accounts[0]?.slice(wallet.accounts[0]?.length - 10)
       );
       await provider.waitForTransaction(res.hash, 1, 150000);
       router.push("/profile");
     } catch (error) {
-      handleNewNotification("error", "An error occurred");
-      setRequestError(formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
+      setRequestLoading(false);
     }
   };
 
   const handleVerify = async () => {
     setRequestLoading(true);
+    setRequestError("");
     const contract = new ethers.Contract(contractAddress, abi, signer);
     try {
       const res = await contract.setKycVerified(
-        address?.slice(address?.length - 10)
+        wallet.accounts[0]?.slice(wallet.accounts[0]?.length - 10)
       );
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "You are now verified");
       setIsVerified(true);
     } catch (error) {
-      handleNewNotification("error", "An error occurred");
-      setRequestError(formatError(error.message));
+      handleNewNotification("error", formatError(error));
+      setRequestError(formatError(error));
     }
     setRequestLoading(false);
   };
@@ -242,7 +249,10 @@ const Create = () => {
                 <FileInput name="image" id="image" onChange={handleChange} />
               </div>
 
-              <button className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white text-xs md:text-base flex justify-center items-center">
+              <button
+                className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white text-xs md:text-base flex justify-center items-center"
+                disabled={btnDisabled}
+              >
                 {requestLoading ? (
                   <Spinner aria-label="Submitting form" size="sm" />
                 ) : (
