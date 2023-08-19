@@ -1,35 +1,30 @@
 require("dotenv").config();
 
-//const mnemonic = process.env.MNEMONIC;
-const apiKey = process.env.INFURA_JSONRPC_API;
-
-const infuraSepoliaApiUrl = 'https://sepolia.infura.io/v3/' + apiKey;
-const infuraApiUrl = 'https://linea-goerli.infura.io/v3/' + apiKey;
-
-//const HDWalletProvider = require("@truffle/hdwallet-provider");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 module.exports = {
   networks: {
-    sepolia: {
-      provider: infuraSepoliaApiUrl,
-      network_id: "11155111", // Specify the Sepolia network ID
-      gas: 30000000,
-      gasPrice: 2500000007,
-      from: "0x9099314601c71BA1ce7e2f4dC394fCC0c8704257", // Specify the deployment address for Sepolia
-    },
+    // sepolia: {
+    //   provider: () => new HDWalletProvider(process.env.PRIVATE_KEY, `https://sepolia.infura.io/v3/${process.env.INFURA_JSONRPC_API}`),
+    //   network_id: "11155111",
+    //   gas: 50000000, 
+    // },
     linea: {
-      //provider: () => new HDWalletProvider(mnemonic, infuraApiUrl),
-      provider: infuraApiUrl,
+      provider: function () {
+        return new HDWalletProvider(process.env.PRIVATE_KEY, `https://linea-goerli.infura.io/v3/${process.env.INFURA_JSONRPC_API}`);
+      },
       network_id: "59140",
-      gas: 30000000,
-      gasPrice: 2500000007,
-      from: "0x6684EdA107283BDbb5f83dfC0f3FbF7aD377B81A", // Specify the deployment address here
+      gas: 55000000, 
+      gasPrice: 310000000,
+
     },
   },
   compilers: {
     solc: {
       version: "^0.8.0",
+      settings: {
+        evmVersion: "london"
+      }
     },
   },
 };
- 
