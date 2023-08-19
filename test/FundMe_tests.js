@@ -57,6 +57,6 @@ describe("FundMe Contract", function () {
     expect(campaign.status).to.equal("0"); // CampaignStatus.ACTIVE
   });
 
-  // Add more test cases as needed
+  //more test cases to be added
 
 });
