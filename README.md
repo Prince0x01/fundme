@@ -13,7 +13,7 @@
 Crowdfunding, while bringing much-needed relief to individuals and organizations, also has its limitations and negative impacts on society. FundMe addresses the following challenges:
 
 1. Exclusion of certain countries and geographical areas from accessing funds.
-2. Risks associated with terrorist financing.
+2. Risks associated with terrorist financing and Misuse of funds.
 3. Low donor engagement throughout the project implementation/execution phase.
 
 ### Exclusion of Certain Geographical Areas from Accessing Funds
@@ -26,17 +26,17 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 - **KYC Verification:** FundMe implements a robust Know Your Customer (KYC) verification process, ensured by a third-party application. This process verifies the legitimacy and identity of all participants involved in the crowdfunding platform. By leveraging a decentralized identity management system, FundMe collects and verifies personal information, ensuring compliance with globally accepted anti-money laundering (AML) and counter-terrorism financing (CTF) policies.
 
-- **Proof of Need (PoN):** The platform requires campaign goals (total amount of money to be raised) to be divided into milestones. The project owner, who initiates a campaign, is required to provide a market survey, feasibility study, or any form of evidence and cost estimation for the project. This process is known as the Proof of Need (PoN).
+- **Proof of Need (PoN) and Proof of Progress (PoP):** The platform requires campaign goals (total amount of money to be raised) to be divided into milestones. The project owner, who initiates a campaign, is required to provide an initial background information like market survey, feasibility study, or any form of evidence and cost estimation for the project's first milestone, that serves as a proof that the project owner has a genuine need for the funds to be raised. This is first evidence is known as the Proof of Need (PoN). After getting approval to withdraw fund for the first milestone, the project owner is subsequently required to provide more information to show the actual use of the funds such as through pictures of receipts or video of the actual project milestone being accomplished, in order to allow donors assess the progress of the project and validate the release of funds for the next milestone to the project owner. This second form of proof is known as the Proof of Progress (PoP).
 
-- **Donor Decision-making:** Potential donors can review the Proof of Need (PoN) of a campaign before deciding which campaign to contribute to. This empowers donors to make informed decisions and ensure their funds align with the intended purposes.
+- **Donor Decision-making:** Potential donors can review the Proof of Need (PoN) or the Proof of Progress (PoP) of a campaign before deciding which campaign to contribute to or whether or not to allow the project owner to have access to the rest of the donated funds respectively. This empowers donors to make informed decisions and ensure their funds align with the intended purposes.
 
-- **Transparent Milestone Verification:** A project owner can only request to withdraw funds when the funds have reached a preset milestone. At each milestone, the project owner is required to upload video, picture, or document files showcasing how the previous funds were spent. This data is stored in an external decentralized database.
+- **Transparent Milestone Verification:** A project owner can only request to withdraw funds when the funds have reached a preset milestone. At each milestone, the project owner is required to upload video, picture, or document files showcasing how the previous funds were spent. This data which is known as the Proof of Progress(PoP) is stored in an external decentralized database.
 
-- **Campaign DAO Vetting:** The campaign DAO (formed by the number of donors contributing to a campaign) can access the off-chain data and vet if the funds were used appropriately. At least 60% of the campaign DAO members must approve for the project owner to withdraw funds.
+- **Campaign DAOlike Vetting:** The campaign DAOlike system (formed by the number of donors contributing to a campaign) can access the off-chain data and vet if the funds were used appropriately. At least 60% of the campaign DAO members must approve for the project owner to withdraw funds.
 
-- **Resolving Milestone:** If a Proof of Need (PoN) is vetted against, the campaign goes into a state of Resolving Milestone, which lasts for a period of 7 days. During this time, the campaign DAO can decide
+- **Resolving Milestone:** If a Proof of Progress (PoP) is vetted against, the campaign goes into a state of Resolving Milestone, which lasts for a period of 7 days. During this time, the campaign DAO can decide
 
- to retrieve their funds. After 7 days, if the campaign DAO has not retrieved the funds, the project owner is given a second chance to upload a genuine Proof of Need (PoN).
+ to retrieve their funds. After 7 days, if the campaign DAO has not retrieved the funds, the project owner is given a second chance to upload a genuine Proof of Progress (PoP) and continue accessing the donated funds.
 
 ### Low Donor Engagement throughout Project Implementation
 
