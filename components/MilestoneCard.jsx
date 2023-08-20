@@ -19,6 +19,7 @@ const MilestoneCard = ({
   requestLoading,
   setRequestLoading,
   campaignId,
+  listedAllMilestones,
   campaignOwner,
   hasPledged,
   lastValidated,
@@ -86,20 +87,20 @@ const MilestoneCard = ({
     setSelectedImage(milestoneCID);
   };
 
-  const validCID = milestoneCID !== "";
+  const validCID = !!milestoneCID;
+  const isOwner =
+    campaignOwner?.toLowerCase() === wallet.accounts[0]?.toLowerCase();
 
   const canValidate =
-    campaignOwner !== wallet.accounts[0] &&
-    hasPledged &&
-    validCID &&
-    !loading &&
-    !hasValidated;
+    !isOwner && hasPledged && validCID && !loading && !hasValidated;
 
   const lastValidatedIndex = lastValidated ? lastValidated.milestoneIndex : 0;
 
-  const canUpload = milestoneIndex === lastValidatedIndex + 1;
+  const canUpload =
+    listedAllMilestones && milestoneIndex === lastValidatedIndex + 1;
 
-  const canWithdraw = allowWithdrawal || milestoneIndex === 1;
+  const canWithdraw =
+    listedAllMilestones && (allowWithdrawal || milestoneIndex === 1);
 
   return (
     <Card>
@@ -129,7 +130,7 @@ const MilestoneCard = ({
             )}
           </button>
         )}
-        {campaignOwner === wallet.accounts[0] && (
+        {isOwner && (
           <>
             {canWithdraw && (
               <button

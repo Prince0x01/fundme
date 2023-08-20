@@ -2,7 +2,7 @@ import { FileInput, Label, Spinner, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
-// import { useNotification } from "web3uikit";
+import { useNotification } from "web3uikit";
 
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
@@ -31,7 +31,7 @@ const Create = () => {
   const [error, setError] = useState(null);
   const [requestError, setRequestError] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
-  // const dispatch = useNotification();
+  const dispatch = useNotification();
 
   const btnDisabled =
     !formData.title ||
@@ -60,6 +60,13 @@ const Create = () => {
 
   const handleNewNotification = (type, message) => {
     sendNotification(message?.slice(0, 49));
+    dispatch({
+      type,
+      message,
+      title: "Transaction Notification",
+      position: "topR",
+      icon: "bell",
+    });
   };
 
   const handleChange = (e) => {

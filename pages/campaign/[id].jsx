@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useRouter } from "next/router";
 import { Spinner } from "flowbite-react";
-// import { useNotification } from "web3uikit";
+import { useNotification } from "web3uikit";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import advancedFormat from "dayjs/plugin/advancedFormat";
@@ -52,7 +52,7 @@ const CampaignPage = () => {
   const [error, setError] = useState("");
   const [requestError, setRequestError] = useState("");
   const [requestLoading, setRequestLoading] = useState(false);
-  // const dispatch = useNotification();
+  const dispatch = useNotification();
   const campaignId = router.query.id;
 
   useEffect(() => {
@@ -73,8 +73,6 @@ const CampaignPage = () => {
         setMilestones(parsedMilestones);
         const parsedCampaign = parseCampaign(res);
         setCampaign(parsedCampaign);
-        console.log(parsedCampaign);
-        console.log(parsedMilestones);
       } catch (error) {
         setError(error.message);
       }
@@ -91,7 +89,10 @@ const CampaignPage = () => {
       const contract = new ethers.Contract(contractAddress, abi, signer);
       try {
         const res = await contract.getDonorAddressesInCampaign(campaignId);
-        const hasDonated = res.includes(wallet.accounts[0]);
+        const lowerCased = res.map((item) => item?.toLowerCase());
+        const hasDonated = lowerCased.includes(
+          wallet.accounts[0]?.toLowerCase()
+        );
         setHasPledged(hasDonated);
       } catch (error) {
         setError(error);
@@ -104,13 +105,13 @@ const CampaignPage = () => {
 
   const handleNewNotification = (type, message) => {
     sendNotification(message?.slice(0, 45));
-    // dispatch({
-    //   type,
-    //   message,
-    //   title: "Transaction Notification",
-    //   position: "topR",
-    //   icon: "bell",
-    // });
+    dispatch({
+      type,
+      message,
+      title: "Transaction Notification",
+      position: "topR",
+      icon: "bell",
+    });
   };
 
   const percentageRaised = calculateBarPercentage(
@@ -283,7 +284,12 @@ const CampaignPage = () => {
   const validOwner =
     campaign.owner !== "0x0000000000000000000000000000000000000000";
 
+  const isOwner =
+    campaign.owner?.toLowerCase() === wallet.accounts[0]?.toLowerCase();
+
   const lastValidated = milestones.find((item) => item.validated);
+
+  const campaignActive = campaign.status === 0;
 
   return (
     <>
@@ -349,44 +355,55 @@ const CampaignPage = () => {
 
                 <h2 className="font-bold text-2xl my-2">Milestones</h2>
 
-                {campaign.milestoneCount < campaign.milestoneNum && (
-                  <h3 className="font-bold text-xl">
-                    You have created {campaign.milestoneCount} of&nbsp;
-                    {campaign.milestoneNum} milestones. Create all milestones to
-                    start receiving donations.
-                  </h3>
-                )}
+                {isOwner &&
+                  campaignActive &&
+                  campaign.milestoneCount < campaign.milestoneNum && (
+                    <h3 className="font-bold text-xl">
+                      You have created {campaign.milestoneCount} of&nbsp;
+                      {campaign.milestoneNum} milestones. Create all milestones
+                      to start receiving donations.
+                    </h3>
+                  )}
 
                 <div className="flex flex-col gap-2">
-                  {milestones.map((item) => (
-                    <MilestoneCard
-                      key={item.milestoneIndex}
-                      {...item}
-                      requestLoading={requestLoading}
-                      campaignId={campaignId}
-                      campaignOwner={campaign.owner}
-                      hasPledged={hasPledged}
-                      lastValidated={lastValidated}
-                      openUploadModal={openUploadModal}
-                      openValidateModal={openValidateModal}
-                      setSelectedImage={setSelectedImage}
-                      setRequestLoading={setRequestLoading}
-                      setSelectedMilestone={setSelectedMilestone}
-                    />
-                  ))}
+                  {!milestones || milestones.length === 0 ? (
+                    <p>No milestones added yet</p>
+                  ) : (
+                    milestones.map((item) => (
+                      <MilestoneCard
+                        key={item.milestoneIndex}
+                        {...item}
+                        requestLoading={requestLoading}
+                        campaignId={campaignId}
+                        campaignOwner={campaign.owner}
+                        hasPledged={hasPledged}
+                        lastValidated={lastValidated}
+                        listedAllMilestones={
+                          campaign.milestoneCount === campaign.milestoneNum
+                        }
+                        openUploadModal={openUploadModal}
+                        openValidateModal={openValidateModal}
+                        setSelectedImage={setSelectedImage}
+                        setRequestLoading={setRequestLoading}
+                        setSelectedMilestone={setSelectedMilestone}
+                      />
+                    ))
+                  )}
                 </div>
 
                 <>
-                  {campaign.milestoneCount < campaign.milestoneNum && (
-                    <div className="flex items-center justify-center my-2">
-                      <button
-                        className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white text-xs md:text-base text-center"
-                        onClick={() => setCreateModal(true)}
-                      >
-                        Create Milestone
-                      </button>
-                    </div>
-                  )}
+                  {isOwner &&
+                    campaignActive &&
+                    campaign.milestoneCount < campaign.milestoneNum && (
+                      <div className="flex items-center justify-center my-2">
+                        <button
+                          className="bg-[#3C4A79] px-4 py-2 rounded-lg text-white text-xs md:text-base text-center"
+                          onClick={() => setCreateModal(true)}
+                        >
+                          Create Milestone
+                        </button>
+                      </div>
+                    )}
                 </>
               </div>
               <section className="flex-[3]">
@@ -416,7 +433,8 @@ const CampaignPage = () => {
                     </div>
                   </div>
                   <div className="flex flex-col items-center justify-center gap-1 mt-8">
-                    {campaign.owner !== wallet.accounts[0] && (
+                    {campaign.owner?.toLowerCase() !==
+                      wallet.accounts[0]?.toLowerCase() && (
                       <div>
                         {campaign.status === 2 ? (
                           <button
@@ -447,9 +465,8 @@ const CampaignPage = () => {
                               </button>
                             )}
                             {hasPledged &&
-                              !(
-                                campaign.status === 0 || campaign.status === 4
-                              ) && (
+                              (campaign.status === 0 ||
+                                campaign.status === 4) && (
                                 <button
                                   className="text-[#3C4A79] px-3 py-2 rounded-lg bg-white text-sm border border-[#3C4A79]"
                                   onClick={handleUnpledge}
@@ -469,20 +486,22 @@ const CampaignPage = () => {
                       </div>
                     )}
 
-                    {campaign.owner === wallet.accounts[0] && (
-                      <div>
-                        <button
-                          className="text-[#3C4A79] px-3 py-2 rounded-lg bg-white text-sm border border-[#3C4A79]"
-                          onClick={handleCancel}
-                        >
-                          {requestLoading ? (
-                            <Spinner aria-label="Submitting form" size="sm" />
-                          ) : (
-                            "Cancel Campaign"
-                          )}
-                        </button>
-                      </div>
-                    )}
+                    {campaign.status !== 2 &&
+                      campaign.owner?.toLowerCase() ===
+                        wallet.accounts[0]?.toLowerCase() && (
+                        <div>
+                          <button
+                            className="text-[#3C4A79] px-3 py-2 rounded-lg bg-white text-sm border border-[#3C4A79]"
+                            onClick={handleCancel}
+                          >
+                            {requestLoading ? (
+                              <Spinner aria-label="Submitting form" size="sm" />
+                            ) : (
+                              "Cancel Campaign"
+                            )}
+                          </button>
+                        </div>
+                      )}
 
                     <p className="break-all text-red-500 capitalize text-center font-bold">
                       {requestError}

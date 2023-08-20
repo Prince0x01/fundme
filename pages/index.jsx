@@ -185,11 +185,16 @@ const Home = () => {
                           </div>
                           <div className="rounded-sm overflow-hidden bg-[#B9BFD3] mb-1">
                             <div
-                              className={`${
-                                percentageRaised > 0
-                                  ? `$w-[${percentageRaised}%]`
-                                  : ""
-                              } h-1 bg-[#B9BFD3]`}
+                              className={`h-1 bg-[#3C4A79]`}
+                              style={{
+                                width: `${
+                                  percentageRaised > 100
+                                    ? `${100}%`
+                                    : percentageRaised > 0
+                                    ? `${percentageRaised}%`
+                                    : "0"
+                                }`,
+                              }}
                             ></div>
                           </div>
                           <div className="flex justify-between">
@@ -198,7 +203,8 @@ const Home = () => {
                           </div>
                         </div>
                         <button className="bg-[#3C4A79] px-3 py-2 rounded-lg text-white text-sm">
-                          {c.owner === wallet.accounts[0]
+                          {c.owner?.toLowerCase() ===
+                          wallet.accounts[0]?.toLowerCase()
                             ? "View Campaign"
                             : "Donate Now"}
                         </button>
