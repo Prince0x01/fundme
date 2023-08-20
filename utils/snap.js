@@ -1,4 +1,4 @@
-const defaultSnapOrigin = `npm:fundme-snap`;
+const defaultSnapOrigin = `local:http://localhost:8080`;
 // const defaultSnapOrigin =
 //   process.env.SNAP_ORIGIN ?? `local:http://localhost:8080`;
 

@@ -31,7 +31,7 @@ const NavbarComp = () => {
     >
       <div className="flex flex-wrap items-center justify-between w-full md:px-0 md:w-11/12 xl:w-4/5 max-w-7xl mx-auto">
         <Navbar.Brand className="text-xl xs:text-3xl font-playfair">
-          FUNDME
+          <img src="/fundme.png" alt="" />
         </Navbar.Brand>
         <div className="flex md:order-2">
           {!hasProvider && (

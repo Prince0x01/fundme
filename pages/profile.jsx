@@ -27,7 +27,7 @@ const Profile = () => {
           activeIds.map(async (id) => await contract.campaigns(id))
         );
         const filteredCampaigns = res
-          .filter((campaign) => campaign.projectOwner === wallet.accounts[0])
+          .filter((campaign) => campaign.projectOwner?.toLowerCase() === wallet.accounts[0]?.toLowerCase())
           .map((item) => parseCampaign(item));
         setCampaigns(filteredCampaigns);
       } catch (error) {
