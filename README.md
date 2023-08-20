@@ -1,6 +1,6 @@
 # FundMe Crowdfunding Platform
 
-![FundMe Logo](fundme\public\fundme.png) <!-- Add a logo image if available -->
+![FundMe Logo](./public/fundme.png) <!-- Add a logo image if available -->
 
 ## Project Description
 
