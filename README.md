@@ -50,7 +50,7 @@ FundMe utilizes the following technologies:
 - **Linea Network:** The Linea L2 network acts as the backend for FundMe and performs the following functions:
   - Receives inputs from a third-party KYC application to verify project owners.
   - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
-  - Link to the deployed contract on linea network using infura json rpc endpoint
+  - Link to the deployed contract on Blockscout
   - https://explorer.goerli.linea.build/tx/0xdf2b91ec8de8019b1407a9f2c55f027a34a9e6e6c59531976c9b3858540f231c
   - Project configured in truffle-config.js file
   - https://github.com/Prince0x01/fundme/blob/main/truffle-config.js
