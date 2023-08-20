@@ -28,7 +28,7 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 - **Proof of Need (PoN) and Proof of Progress (PoP):** The platform requires campaign goals (total amount of money to be raised) to be divided into milestones. The project owner, who initiates a campaign, is required to provide an initial background information like market survey, feasibility study, or any form of evidence and cost estimation for the project's first milestone, that serves as a proof that the project owner has a genuine need for the funds to be raised. This is first evidence is known as the Proof of Need (PoN). After getting approval to withdraw fund for the first milestone, the project owner is subsequently required to provide more information to show the actual use of the funds such as through pictures of receipts or video of the actual project milestone being accomplished, in order to allow donors assess the progress of the project and validate the release of funds for the next milestone to the project owner. This second form of proof is known as the Proof of Progress (PoP).
 
-- **Donor Decision-making:** Potential donors can review the Proof of Need (PoN) or the Proof of Progress (PoP) of a campaign before deciding which campaign to contribute to or whether or not to allow the project owner to have access to the rest of the donated funds respectively. This empowers donors to make informed decisions and ensure their funds align with the intended purposes.
+- **Donor Decision-making:** Potential donors can review the Proof of Need (PoN) or the Proof of Progress (PoP) of a campaign before deciding which campaign to contribute to or whether or not to allow the project owner to have access to the rest of the donated funds respectively. This empowers donors to make informed decisions and ensure their funds align with the intended purposes and are used judiciously.
 
 - **Transparent Milestone Verification:** A project owner can only request to withdraw funds when the funds have reached a preset milestone. At each milestone, the project owner is required to upload video, picture, or document files showcasing how the previous funds were spent. This data which is known as the Proof of Progress(PoP) is stored in an external decentralized database.
 
@@ -50,6 +50,10 @@ FundMe utilizes the following technologies:
 - **Linea Network:** The Linea L2 network acts as the backend for FundMe and performs the following functions:
   - Receives inputs from a third-party KYC application to verify project owners.
   - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
+  - Link to the deployed contract on Blockscout
+  - https://explorer.goerli.linea.build/tx/0xdf2b91ec8de8019b1407a9f2c55f027a34a9e6e6c59531976c9b3858540f231c
+  - Project configured in truffle-config.js file
+  - https://github.com/Prince0x01/fundme/blob/main/truffle-config.js
 
 ## Team Members
 
