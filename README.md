@@ -1,6 +1,6 @@
 # FundMe Crowdfunding Platform
 
-![FundMe Logo](/path/to/logo.png) <!-- Add a logo image if available -->
+![FundMe Logo](fundme\public\fundme.png) <!-- Add a logo image if available -->
 
 ## Project Description
 
@@ -55,24 +55,6 @@ FundMe utilizes the following technologies:
   - Project configured in truffle-config.js file
   - https://github.com/Prince0x01/fundme/blob/main/truffle-config.js
 
-## Team Members
-
-The FundMe project is developed by a dedicated team of individuals:
-
-1) Princewill Ogolo
-   - Pseudonym: Prince0x01
-   - GitHub: [https://github.com/Prince0x01/](https://github.com/prince0x01)
-   - Email: ogoloprince4@gmail.com
-
-2) Emmanuel Amieye
-   - Pseudonym: Emmy j #1136
-   - GitHub: [https://github.com/code-xiake](https://github.com/code-xiake)
-   - Email: emmanuelamieye4@gmail.com
-
-3) Anderson Osayerie
-   - Pseudonym: andemosa
-   - GitHub: [https://github.com/andemosa](https://github.com/andemosa)
-   - Email: osayerieanderson@gmail.com
 
 ## Stack Used
 
@@ -91,3 +73,22 @@ The FundMe project is developed by a dedicated team of individuals:
 - Metamask: Metamask SDK and
 - Metamask Snaps: Transaction insight snaps
 
+
+## Team Members
+
+The FundMe project is developed by a dedicated team of individuals:
+
+1) Princewill Ogolo
+   - Pseudonym: Prince0x01
+   - GitHub: [https://github.com/Prince0x01/](https://github.com/prince0x01)
+   - Email: ogoloprince4@gmail.com
+
+2) Emmanuel Amieye
+   - Pseudonym: Emmy j #1136
+   - GitHub: [https://github.com/code-xiake](https://github.com/code-xiake)
+   - Email: emmanuelamieye4@gmail.com
+
+3) Anderson Osayerie
+   - Pseudonym: andemosa
+   - GitHub: [https://github.com/andemosa](https://github.com/andemosa)
+   - Email: osayerieanderson@gmail.com
