@@ -48,6 +48,15 @@ const UploadModal = ({
             <Label htmlFor="image" value="Image" />
           </div>
           <FileInput name="image" id="image" onChange={handleChange} />
+          <div className="flex items-center justify-center my-3">
+            {formData.image && (
+              <img
+                src={formData.imageUrl}
+                alt=""
+                className="w-40 h-40 rounded-lg"
+              />
+            )}
+          </div>
         </div>
 
         <div className="w-full flex justify-center items-center">
