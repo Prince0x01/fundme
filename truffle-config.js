@@ -11,10 +11,11 @@ module.exports = {
     },
     linea: {
       provider: function () {
-        return new HDWalletProvider(process.env.PRIVATE_KEY, `https://linea-goerli.infura.io/v3/${process.env.INFURA_JSONRPC_API}`);
+        return new HDWalletProvider(process.env.MNEMONIC, `https://linea-goerli.infura.io/v3/${process.env.INFURA_JSONRPC_API}`);
       },
       network_id: "59140",
-      gas: 50000000, 
+      gas: 30000000, 
+      gasPrice: 3100000000,
 
     },
   },
