@@ -5,9 +5,10 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 module.exports = {
   networks: {
     sepolia: {
-      provider: () => new HDWalletProvider(process.env.PRIVATE_KEY, `https://sepolia.infura.io/v3/${process.env.INFURA_JSONRPC_API}`),
+      provider: () => new HDWalletProvider(process.env.MNEMONIC, `https://sepolia.infura.io/v3/${process.env.INFURA_JSONRPC_API}`),
       network_id: "11155111",
-      gas: 50000000, 
+      gas: 30000000,
+      gasPrice: 3100000000, 
     },
     linea: {
       provider: function () {

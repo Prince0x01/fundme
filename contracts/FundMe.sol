@@ -3,13 +3,14 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
 /**
  * @title FundMe
  * @dev A crowdfunding platform that allows users to create and contribute to fundraising campaigns.
  */
 
-contract FundMe {
+contract FundMe is ReentrancyGuard{
     using EnumerableSet for EnumerableSet.AddressSet;
     using SafeMath for uint;
      
@@ -215,7 +216,7 @@ contract FundMe {
     * @dev function to close a campaign.
     * @param campaignId The ID of the campaign to close.
     */
-    function closeCampaign(uint campaignId) internal returns (bool) {
+    function closeCampaign(uint campaignId) external returns (bool) {
         require(campaigns[campaignId].status == CampaignStatus.ACTIVE, "Campaign is not active");
         if (campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal && block.timestamp >= campaigns[campaignId].timeline) {
             campaigns[campaignId].status = CampaignStatus.CLOSED;
@@ -296,7 +297,7 @@ contract FundMe {
     * @dev function to refund a donor.
     * @param campaignId The ID of the campaign to refund.
     */
-    function refundDonor(uint campaignId) public payable onlyDonors {
+    function refundDonor(uint campaignId) public nonReentrant payable onlyDonors {
         if (campaigns[campaignId].status == CampaignStatus.ACTIVE || campaigns[campaignId].status == CampaignStatus.RESOLVING_CAMPAIGN_GOAL) {
             require(campaignDonorStatus[campaignId][msg.sender] == true, "This donor has not contributed to this campaign");
 
@@ -338,7 +339,7 @@ contract FundMe {
     * @param campaignId The ID of the campaign to withdraw funds from.
     * @param milestoneHash The hash of the milestone to withdraw funds for
     */
-    function withdraw(uint campaignId, bytes32 milestoneHash) external payable onlyProjectOwner(campaignId) returns (bool) {
+    function withdraw(uint campaignId, bytes32 milestoneHash) external nonReentrant payable onlyProjectOwner(campaignId) returns (bool) {
         // Make sure the campaign is active and the goal amount has been met
         require(campaigns[campaignId].status == CampaignStatus.CLOSED || campaigns[campaignId].status == CampaignStatus.PAYING_OUT, "You cannot withdraw funds from this campaign at this moment");
         //require(campaigns[campaignId].totalFundDonated >= campaigns[campaignId].campaignGoal, "Goal amount has not been met");
@@ -398,7 +399,7 @@ contract FundMe {
     * @param milestoneProofCID the milestone proof's content identifier stored on IPFS to update 
     * @dev only the project owner can update the milestone's proof
     */
-    function updateMilestoneProof(bytes32 milestoneHash, string memory milestoneProofCID) external onlyProjectOwner(_campaignId) returns (string memory) {
+    function updateMilestoneProof(bytes32 milestoneHash, string memory milestoneProofCID, uint256 campaignId) external onlyProjectOwner(campaignId) returns (string memory) {
         //require(milestonesOf[milestoneHash].milestoneProofCID = milestoneProofCID , "Milestone already has a proof");
         milestoneValidatedByHash[milestoneHash][msg.sender] = false;
         milestonesOf[milestoneHash].milestoneValidated = false;
