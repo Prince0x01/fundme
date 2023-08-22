@@ -70,8 +70,6 @@ FundMe utilizes the following technologies:
 
 In future versions, FundMe aims to implement a contract that allows project owners to mint and sell NFTs as a means of raising funds. This would provide an additional avenue for fundraising, beyond relying solely on user-contributed funds. The project owners would be able to leverage platform-based NFT storage or third-party marketplaces to mint and store the NFTs. These NFTs would be advertised on the campaign's page, and when users purchase these NFTs, they would contribute to the campaign goal through the purchased NFTs. Additionally, owning these NFTs would grant users the right to vote for the release of funds to project owners.
 
-Please let me know if there's anything else I can help you with!
-
 
 
 ## Team Members
