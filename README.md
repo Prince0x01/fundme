@@ -64,8 +64,7 @@ FundMe utilizes the following technologies:
 - Ethereum Networks: Sepolia testnet for deployment and Linear L2 network
 - Ethers: Web3 framework
 - Truffle and Infura: [Truffle-config.js](https://github.com/Prince0x01/fundme/blob/main/truffle-config.js) file and Infura RPC endpoints
-- Metamask SDK and Metamask Snaps Use
-- [`./fundme/hooks/useMetaMask.jsx`](https://github.com/Prince0x01/fundme/blob/main/hooks/useMetaMask.jsx)
+- Metamask SDK and Metamask Snaps Use: [Using sdk and snaps](https://github.com/Prince0x01/fundme/blob/main/hooks/useMetaMask.jsx)
 
 ## Future Development
 
