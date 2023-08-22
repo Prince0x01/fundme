@@ -1,12 +1,6 @@
 export const abi = [
   {
-    inputs: [
-      {
-        internalType: "address payable",
-        name: "_owner",
-        type: "address",
-      },
-    ],
+    inputs: [],
     stateMutability: "nonpayable",
     type: "constructor",
   },
@@ -56,103 +50,6 @@ export const abi = [
     type: "event",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    name: "cancelCampaign",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_title",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_imageURL",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_campaignGoal",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_timeline",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_milestoneNum",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_verificationProof",
-        type: "string",
-      },
-    ],
-    name: "createCampaign",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_milestoneIndex",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_milestoneDetails",
-        type: "string",
-      },
-    ],
-    name: "createMilestone",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -164,7 +61,7 @@ export const abi = [
       {
         indexed: true,
         internalType: "address",
-        name: "ProjectOwner",
+        name: "projectOwner",
         type: "address",
       },
       {
@@ -219,7 +116,7 @@ export const abi = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: "bytes32",
         name: "milestoneHash",
         type: "bytes32",
@@ -227,24 +124,6 @@ export const abi = [
     ],
     name: "MilestoneValidated",
     type: "event",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountToRefund",
-        type: "uint256",
-      },
-    ],
-    name: "performRefund",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
   },
   {
     anonymous: false,
@@ -272,37 +151,6 @@ export const abi = [
     type: "event",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amountToDonate",
-        type: "uint256",
-      },
-    ],
-    name: "pledgeToCampaign",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    name: "refundDonor",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -328,38 +176,6 @@ export const abi = [
     type: "event",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "verificationProof",
-        type: "string",
-      },
-    ],
-    name: "setKycVerified",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    name: "unpledge",
-    outputs: [],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
     anonymous: false,
     inputs: [
       {
@@ -381,77 +197,6 @@ export const abi = [
   {
     inputs: [
       {
-        internalType: "bytes32",
-        name: "milestoneHash",
-        type: "bytes32",
-      },
-      {
-        internalType: "string",
-        name: "milestoneProofCID",
-        type: "string",
-      },
-    ],
-    name: "updateMilestoneProof",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "milestoneHash",
-        type: "bytes32",
-      },
-    ],
-    name: "validateMilestone",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes32",
-        name: "milestoneHash",
-        type: "bytes32",
-      },
-    ],
-    name: "withdraw",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "payable",
-    type: "function",
-  },
-  {
-    stateMutability: "payable",
-    type: "receive",
-  },
-  {
-    inputs: [
-      {
         internalType: "uint256",
         name: "",
         type: "uint256",
@@ -467,6 +212,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [],
@@ -480,6 +226,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -504,6 +251,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -523,6 +271,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -597,6 +346,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -621,6 +371,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [],
@@ -634,57 +385,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [],
-    name: "getActiveCampaignIds",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    name: "getDonorAddressesInCampaign",
-    outputs: [
-      {
-        internalType: "address[]",
-        name: "",
-        type: "address[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "campaignId",
-        type: "uint256",
-      },
-    ],
-    name: "getMilestoneList",
-    outputs: [
-      {
-        internalType: "bytes32[]",
-        name: "",
-        type: "bytes32[]",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -704,6 +405,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -723,6 +425,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -747,6 +450,32 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "milestoneValidatedByHash",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -801,30 +530,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
-    name: "milestoneValidatedByHash",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -844,6 +550,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [],
@@ -857,6 +564,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [],
@@ -870,6 +578,7 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
   },
   {
     inputs: [
@@ -889,7 +598,341 @@ export const abi = [
     ],
     stateMutability: "view",
     type: "function",
+    constant: true,
+  },
+  {
+    stateMutability: "payable",
+    type: "receive",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "verificationProof",
+        type: "string",
+      },
+    ],
+    name: "setKycVerified",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_title",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_imageURL",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "_campaignGoal",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_timeline",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_milestoneNum",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_verificationProof",
+        type: "string",
+      },
+    ],
+    name: "createCampaign",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "cancelCampaign",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "closeCampaign",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountToDonate",
+        type: "uint256",
+      },
+    ],
+    name: "pledgeToCampaign",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "unpledge",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "refundDonor",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amountToRefund",
+        type: "uint256",
+      },
+    ],
+    name: "performRefund",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "milestoneHash",
+        type: "bytes32",
+      },
+    ],
+    name: "withdraw",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "payable",
+    type: "function",
+    payable: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_milestoneIndex",
+        type: "uint256",
+      },
+      {
+        internalType: "string",
+        name: "_milestoneDetails",
+        type: "string",
+      },
+    ],
+    name: "createMilestone",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "milestoneHash",
+        type: "bytes32",
+      },
+      {
+        internalType: "string",
+        name: "milestoneProofCID",
+        type: "string",
+      },
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "updateMilestoneProof",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "milestoneHash",
+        type: "bytes32",
+      },
+    ],
+    name: "validateMilestone",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "getDonorAddressesInCampaign",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [],
+    name: "getActiveCampaignIds",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "campaignId",
+        type: "uint256",
+      },
+    ],
+    name: "getMilestoneList",
+    outputs: [
+      {
+        internalType: "bytes32[]",
+        name: "",
+        type: "bytes32[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
   },
 ];
 
-export const contractAddress = "0x3409532B05bb89A59BD7B72e3A5678b00Eb35CF4";
+export const contractAddress = "0xc8EfB18004371bC1dffA27C665beD5224B6ceE4e";

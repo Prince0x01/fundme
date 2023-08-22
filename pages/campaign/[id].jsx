@@ -73,6 +73,17 @@ const CampaignPage = () => {
         setMilestones(parsedMilestones);
         const parsedCampaign = parseCampaign(res);
         setCampaign(parsedCampaign);
+
+        //check status
+        const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+        if (
+          parsedCampaign.status === 0 &&
+          parsedCampaign.totalFundDonated >= parsedCampaign.goal &&
+          currentTime >= parsedCampaign.deadline
+        ) {
+          const res = await contract.closeCampaign(parsedCampaign.id);
+          await provider.waitForTransaction(res.hash, 1, 150000);
+        }
       } catch (error) {
         setError(error.message);
       }
@@ -162,7 +173,8 @@ const CampaignPage = () => {
 
       const res = await contract.updateMilestoneProof(
         selectedMilestone,
-        imageUrl
+        imageUrl,
+        campaign.id
       );
       await provider.waitForTransaction(res.hash, 1, 150000);
       handleNewNotification("info", "Milestone proof uploaded successfully");

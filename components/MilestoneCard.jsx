@@ -15,7 +15,7 @@ const MilestoneCard = ({
   milestoneHash,
   milestoneCID,
   votes,
-  allowWithdrawal,
+  validated,
   requestLoading,
   setRequestLoading,
   campaignId,
@@ -99,8 +99,10 @@ const MilestoneCard = ({
   const canUpload =
     listedAllMilestones && milestoneIndex === lastValidatedIndex + 1;
 
-  const canWithdraw =
-    listedAllMilestones && (allowWithdrawal || milestoneIndex === 1);
+  // const canWithdraw =
+  //   listedAllMilestones && (allowWithdrawal || milestoneIndex === 1);
+
+  const canWithdraw = validated
 
   return (
     <Card>
