@@ -21,7 +21,7 @@ const ValidateModal = ({
         <h3 className="text-xl font-bold text-gray-900 dark:text-white">
           Validate Proof
         </h3>
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full flex items-center justify-center my-4">
           <img
             className="h-auto max-w-lg rounded-lg"
             src={selectedImage}

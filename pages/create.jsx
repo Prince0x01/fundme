@@ -16,8 +16,7 @@ import { formatError } from "@/utils/helpers";
 import { sendNotification } from "@/utils";
 
 const Create = () => {
-  const { signer, provider, wallet } =
-    useMetaMask();
+  const { signer, provider, wallet } = useMetaMask();
   const router = useRouter();
   const [isVerified, setIsVerified] = useState(true);
   const [formData, setFormData] = useState({
@@ -254,6 +253,15 @@ const Create = () => {
                   <Label htmlFor="image" value="Image" />
                 </div>
                 <FileInput name="image" id="image" onChange={handleChange} />
+                <div className="flex items-center justify-center my-3">
+                  {formData.image && (
+                    <img
+                      src={formData.imageUrl}
+                      alt=""
+                      className="w-40 h-40 rounded-lg"
+                    />
+                  )}
+                </div>
               </div>
 
               <button
