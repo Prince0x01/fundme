@@ -6,7 +6,7 @@
 
 **Project Name:** FundMe Crowdfunding Platform
 
-**Summary:** FundMe is a decentralized crowdfunding platform deployed on the Linea network and utilizes the zkp rollup technology of the linea network to interact with the ethereum blockchain. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables project owners to showcase their projects, set funding goals, and receive donations from interested individuals (donors). Unlike traditional crowdfunding platforms, FundMe incorporates a method tha uses a DAOlike approach where donors or contributors of a given campaign democratically vet proofs provided by project owners according to preset milestones, ensuring transparency and eliminating the possibility of dishonest use or misappropriation of funds. The platform also implements KYC capabilities using a third-party decentralized identity verification system to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
+**Summary:** FundMe is a decentralized crowdfunding platform deployed on the Linea network and utilizes the zkp rollup technology of the linea network to interact with the ethereum blockchain. It provides a secure and transparent way for individuals and organizations to create and contribute to fundraising campaigns. The platform enables project owners to showcase their projects, set funding goals, and receive donations from interested individuals (donors). Unlike traditional crowdfunding platforms, FundMe incorporates a method tha uses a DAO-like approach where donors or contributors of a given campaign democratically vet proofs provided by project owners according to preset milestones, ensuring transparency and eliminating the possibility of dishonest use or misappropriation of funds. The platform also implements KYC capabilities using a third-party decentralized identity verification system to ensure compliance with globally accepted anti-money laundering and terrorist financing policies.
 
 ## Problem Statement
 
@@ -34,7 +34,7 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 - **Campaign DAOlike Vetting:** The campaign DAOlike system (formed by the number of donors contributing to a campaign) can access the off-chain data and vet if the funds were used appropriately. At least 60% of the campaign DAO members must approve for the project owner to withdraw funds.
 
-- **Resolving Milestone:** If a Proof of Progress (PoP) is vetted against, the campaign goes into a state of Resolving Milestone, which lasts for a period of 7 days. During this time, the campaign DAO can decide
+- **Resolving Milestone:** If a Proof of Progress (PoP) is vetted against, the campaign goes into a state of Resolving Milestone, which lasts for a period of 7 days. During this time, the campaign donors can decide
 
  to retrieve their funds. After 7 days, if the campaign DAO has not retrieved the funds, the project owner is given a second chance to upload a genuine Proof of Progress (PoP) and continue accessing the donated funds.
 
@@ -42,21 +42,17 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 In traditional crowdfunding platforms, donors have no means to actively verify that their funds were used for the intended purposes. After making a donation, donors typically have no active role to play throughout the project implementation/execution phase. FundMe addresses this issue by giving donors the power to ensure their funds are used for the intended purposes, mitigating the risk of unintentionally funding a terrorist organization.
 
-## Linea Technology
+# FundMe
 
 FundMe utilizes the following technologies:
 
-- **Smart Contract:** The project's smart contract is written in Solidity and interacts with the linea network.
+## Technologies Used
+
 - **Linea Network:** The Linea L2 network acts as the backend for FundMe and performs the following functions:
   - Receives inputs from a third-party KYC application to verify project owners.
   - Stores the funds provided by donors and assigns them as campaign DAOs to verify the appropriate use of funds as stated in the Proof of Need (PoN).
-  - Link to the deployed contract on Blockscout
-  - https://explorer.goerli.linea.build/tx/0xdf2b91ec8de8019b1407a9f2c55f027a34a9e6e6c59531976c9b3858540f231c
-  - Project configured in truffle-config.js file
-  - https://github.com/Prince0x01/fundme/blob/main/truffle-config.js
-
-
-## Stack Used
+  - [Link to the deployed contract on Blockscout](https://explorer.goerli.linea.build/tx/0xdf2b91ec8de8019b1407a9f2c55f027a34a9e6e6c59531976c9b3858540f231c)
+  - Project configured in [truffle-config.js](https://github.com/Prince0x01/fundme/blob/main/truffle-config.js) file
 
 - Next.js: React framework
 - Tailwind CSS: Styling framework
@@ -65,13 +61,18 @@ FundMe utilizes the following technologies:
 - Web3.storage: Storing files on IPFS
 - Framer Motion: Custom animations
 - Fractal.id: Decentralized identity management
-- Solidity: Programming language
-- Ethereum Networks: Sepolia testnet for deployment and Linear l2 network
+- Ethereum Networks: Sepolia testnet for deployment and Linear L2 network
 - Ethers: Web3 framework
-- Infura: Infura RPC endpoints
-- Truffle: Truffle dashboard,truffle config file and migrations for contract compilation and deployment
-- Metamask: Metamask SDK and
-- Metamask Snaps: Transaction insight snaps
+- Truffle and Infura: [Truffle-config.js](https://github.com/Prince0x01/fundme/blob/main/truffle-config.js) file and Infura RPC endpoints
+- Metamask SDK and Metamask Snaps Use
+- `./fundme/hooks/useMetaMask.jsx`
+
+## Future Development
+
+In future versions, FundMe aims to implement a contract that allows project owners to mint and sell NFTs as a means of raising funds. This would provide an additional avenue for fundraising, beyond relying solely on user-contributed funds. The project owners would be able to leverage platform-based NFT storage or third-party marketplaces to mint and store the NFTs. These NFTs would be advertised on the campaign's page, and when users purchase these NFTs, they would contribute to the campaign goal through the purchased NFTs. Additionally, owning these NFTs would grant users the right to vote for the release of funds to project owners.
+
+Please let me know if there's anything else I can help you with!
+
 
 
 ## Team Members
