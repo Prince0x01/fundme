@@ -42,8 +42,6 @@ One of the main concerns in internet crowdfunding is the inability to ensure tha
 
 In traditional crowdfunding platforms, donors have no means to actively verify that their funds were used for the intended purposes. After making a donation, donors typically have no active role to play throughout the project implementation/execution phase. FundMe addresses this issue by giving donors the power to ensure their funds are used for the intended purposes, mitigating the risk of unintentionally funding a terrorist organization.
 
-# FundMe
-
 FundMe utilizes the following technologies:
 
 ## Technologies Used
